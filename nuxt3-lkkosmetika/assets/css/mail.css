@@ -1,0 +1,12 @@
+.mail-content div {
+    padding: 5px;
+    color: red;
+}
+
+.mail-content td {
+    padding: 5px;
+}
+
+.mail-contact {
+    padding: 10px 0;
+}

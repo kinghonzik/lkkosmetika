@@ -1,0 +1,9 @@
+Ma jit jednotlive pary Vendor/Product i mazat?
+
+Neni nahodou potreba u zaznamu OrderDB-Order datum a Id?
+
+OrderDB-order-product_id - to ma byt pole? Je tu druha moznost, pouzit separatni tabulku a propojit cizim klicem
+
+Zaznamy v orderDB ma jit editovat / mazat?
+
+Co validace formulare

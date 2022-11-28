@@ -1,0 +1,30 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "devDependencies": {
+    "nuxt": "3.0.0-rc.11"
+  },
+  "dependencies": {
+    "@babel/core": "^7.19.6",
+    "@babel/preset-env": "^7.19.4",
+    "@iconify-prerendered/vue-fa-solid": "^0.13.1656181888",
+    "@popperjs/core": "^2.11.6",
+    "@tinymce/tinymce-vue": "^4.0.7",
+    "bootstrap": "^4.4.0",
+    "iconify": "^1.4.0",
+    "jquery": "^3.6.1",
+    "require": "^0.4.4",
+    "tinymce": "^6.2.0",
+    "vue-universal-modal": "^1.1.4",
+    "vue2-editor": "^1.0.1"
+  },
+  "presets": [
+    "@babel/preset-env"
+  ]
+}
