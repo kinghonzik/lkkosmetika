@@ -4,7 +4,7 @@
       <div class="title">{{formType == 'new' ? 'Nový produkt' : 'Produkt id: ' + product.id}}</div>
       <div>
         <button @click="btClickSave()" class="btn btn-success " style="margin: 10px 0 20px 20px"> Uložit a zavřít </button>
-        <button @click="btClickGoBack()" class="btn btn-danger " style="margin: 10px 0 20px 5px"> Zavřít bez uložení </button>
+        <button @click="btClickGoBack()" class="btn btn-danger " style="margin: 10px 0 20px 5px"> Zavřít </button>
       </div>
       <div class="section-inline col-sm-12">
           <div class="form-group row">
@@ -53,7 +53,6 @@
             <div class="col-sm-3">
               <select class="form-control" v-model="product.data.manufacturer">
                 <option v-for="item in config?.manufacturers" :value="item.id">{{item.id}}</option>
-                <option value="">Bez výrobce</option>
               </select>
             </div>
           </div>

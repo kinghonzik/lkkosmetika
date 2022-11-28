@@ -1,5 +1,5 @@
 <template>
-  <div class="page-content">
+  <div class="page-content" v-show="ready">
     <div class="control-panel">  
       <div class="col-sm-3 item">
         <label> Seřadit podle: </label>
@@ -41,7 +41,7 @@
       <button @click="btClickRemoveFilters()" class="btn btn-outline-dark btn-sm" style="margin: 10px 0 0 5px"> Zrušít filtry </button>
       <button @click="btClickAddProduct()" class="btn btn-outline-success btn-sm" style="margin: 10px 0 0 5px"> Přidat produkt </button>
     </div>
-    <table class="table">
+    <table class="table table-hover">
       <thead>
         <tr>
           <th></th>
@@ -55,7 +55,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item of products2View" class="product">
+        <tr v-for="item of products2View" class="product" :id="item.data.id" style="cursor: pointer" title="Kliknutím přejdete do editace" @click="btClickEditProduct(item)">
           <td>
             <div>
               <img :src="item.data.image ? '/img/products/' + item.data.image.src : '#'"/>
@@ -110,20 +110,25 @@
             productsList: [],
             products2View: [],
             config: null,
+            ready: false,
           }
       },
       methods: {
         orderChanged() {
           this.applyProductsOrdering();
+          this.updateUrl();
         },
         filterPublishChanged() {
           this.filterPublishing();
+          this.updateUrl();
         },
         filterAvailabilityChanged() {
           this.filterAvailabilityMethod();
+          this.updateUrl();
         },
         filterManufacturerChanged() {
           this.filterManufacturerMethod();
+          this.updateUrl();
         },
         btClickRemoveFilters() {
           this.orderBy = 'id asc';
@@ -135,6 +140,7 @@
           this.filterPublishing();
           this.filterAvailabilityMethod();
           this.filterManufacturerMethod();
+          this.updateUrl();
         },
         btClickAddProduct() {
           navigateTo('/admin/product/newProduct')
@@ -233,16 +239,49 @@
           }
         },
         async reloadProducts() {
-          const data = await $fetch('/api/data_products');
-          const dataParsered = JSON.parse(data);
-          this.productsList = dataParsered;
-          this.products2View = [...this.productsList];
-          this.applyProductsOrdering();
-        }
+          try {
+            const data = await $fetch(this.$config.bUrl + 'getProducts.php');
+            const dataParsered = JSON.parse(data);
+            this.productsList = dataParsered;
+            this.products2View = [...this.productsList];
+            this.applyProductsOrdering();
+          } catch(exception) {
+              alert('Došlo k nějaké chybě');
+              throw exception;
+          }
+        },
+        getOptionsObj() {
+            return {
+                orderBy: this.orderBy,
+                filterPublished: this.filterPublished,
+                filterAvailability: this.filterAvailability,
+                filterManufacturer: this.filterManufacturer,
+            }
+        },
+        updateUrl() {
+            history.pushState({},null,this.$route.path + '?options=' + JSON.stringify(this.getOptionsObj()));
+        },
       },
       async mounted() {
-          this.config = JSON.parse(await $fetch('/api/data_config'));
-          await this.reloadProducts();
+        if(this.$route.query?.options) {
+            const obj = JSON.parse(this.$route.query.options);
+            this.orderBy = obj.orderBy;
+            this.filterPublished = obj.filterPublished;
+            this.filterAvailability = obj.filterAvailability;
+            this.filterManufacturer = obj.filterManufacturer;
+        }
+        try {
+            this.config = JSON.parse(await $fetch(this.$config.bUrl + 'getConfig.php'));
+        } catch(exception) {
+            alert('Došlo k nějaké chybě');
+            throw exception;
+        }
+        await this.reloadProducts();
+        this.applyProductsOrdering();
+        this.filterPublishing();
+        this.filterAvailabilityMethod();
+        this.filterManufacturerMethod();
+        this.ready = true;
       }
   })
 </script>

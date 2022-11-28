@@ -223,10 +223,9 @@
                         <label class="form-check-label" for="sendMsgCustomer">Odeslat zprávu o stavu objednáky zákazníkovi</label>
                     </div>
                 </div>
-                <div class="form-group row" v-if="mailToCustomer">
+                <!--div class="form-group row" v-if="mailToCustomer">
                     <label class="col-sm-12 col-form-label"> Mail</label>
                     <div class="col-sm-12">
-                    <!--textarea class="form-control" id="desc_long" rows="15" v-model="product.data.description"></textarea-->
                     <editor :init="{ 
                         height: 500, 
                         plugins: [
@@ -246,29 +245,31 @@
                     
                     </editor>
                     </div>
+                </div-->
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label">Poznámka</label>
+                    <div class="col-sm-8">
+                        <textarea class="form-control" v-model="mailToCustomerDesc" :disabled="mailToCustomer == false"></textarea>
+                    </div>
                 </div>
-                <!--div class="form-group row" style="padding-left: 15px;">
+                <div class="form-group row" style="padding-left: 15px;">
                     <div class="form-check">
                         <input :class="['form-check-input']" 
                             type="checkbox" id="sendMsgCustomer" 
                             v-model="mailToCustomerInvoice" required>
                         <label class="form-check-label" for="sendMsgCustomer">Odeslat zákazníkovi fakturu v příloze (ještě nemáme doprogramovaný)</label>
                     </div>
-                </div-->
-                <!--div class="form-group row">
-                    <label class="col-sm-4 col-form-label">Poznámka</label>
-                    <div class="col-sm-8">
-                        <textarea class="form-control" v-model="mailToCustomerDesc" :disabled="mailToCustomer == false"></textarea>
-                    </div>
-                </div-->
+                </div>
                 <button @click="stateDialog = false" class="btn btn-danger">Zavřít</button>
                 <button @click="btClickChangeState()" class="btn btn-success" style="margin-left: 10px;">Ok</button>
             </Modal>
             <div v-show="false" id="mailContent">
                 <div class="mail-content">
-                    <div class='data-row'> Objednávka číslo: {{order.id}} </div>
-                    <div class='data-row'>Stav: <b>{{order.state}}</b></div>
-                    <div> Rekapitulace objednávky: </div>
+                    <div class='title'> Dobrý den vážený zákazníku </div>
+                    <div class='data-row'> Stav vaší objednávky byl změněn na: <b>{{order.state}}</b></div>
+                    <div class='data-row'>Objednávka číslo: {{order.id}} </div>
+                    <div class='data-row' >{{mailToCustomerDesc}}</div>
+                    <div class='data-row'> Rekapitulace objednávky: </div>
                     <table>
                         <thead>
                             <tr>
@@ -289,11 +290,11 @@
                             </tr>
                         </tbody>
                     </table>
-                    <div> Doprava:  {{shippingOptions.find(itm => itm.id == order.shipping)?.title}} - {{order.shippingPrice}} {{config.priceUnit}}</div>
-                    <div> Platba: {{paymentOptions.find(itm => itm.id == order.payment)?.title}} -  {{order.paymentPrice}} {{config.priceUnit}}</div>
-                    <div><b>Celková cena: {{order.totalPrice}} {{config.priceUnit}}</b></div>
+                    <div class='data-row'> Doprava:  {{shippingOptions.find(itm => itm.id == order.shipping)?.title}} - {{order.shippingPrice}} {{config.priceUnit}}</div>
+                    <div class='data-row'> Platba: {{paymentOptions.find(itm => itm.id == order.payment)?.title}} -  {{order.paymentPrice}} {{config.priceUnit}}</div>
+                    <div class='data-row'><b>Celková cena: {{order.totalPrice}} {{config.priceUnit}}</b></div>
                     <div class="mail-contact">
-                        <div>{{ bllingAddressSame ? 'Doručovací údaje' : 'Doručovací a fakturační údaje'}}</div>
+                        <div class='data-row' ><b>{{ bllingAddressSame ? 'Doručovací údaje' : 'Doručovací a fakturační údaje'}}</b></div>
                         <table>
                             <tbody>
                                 <tr>
@@ -320,7 +321,7 @@
                         </table>
                     </div>
                     <div v-if="!bllingAddressSame" class="mail-contact">
-                        <div>{{'Fakturační údaje'}}</div>
+                        <div class='data-row'><b>{{'Fakturační údaje'}}</b></div>
                         <table>
                             <tbody>
                                 <tr>
@@ -338,6 +339,8 @@
                             </tbody>
                         </table>
                     </div>
+                    <div class='data-row'> S přáním hezkého dne </div>
+                    <div class='data-row'> Tým LKkosmetika.cz</div>
                 </div>
             </div>
         </div>
@@ -365,7 +368,7 @@ import Editor from '@tinymce/tinymce-vue'
             shippingOptions: ShippingOptions,
             paymentOptions: PaymentOptions,
             orderStates: OrderStates,
-            mailHtml: 'juhuuuu',
+            mailHtml: '',
         }
     },
     components: {
@@ -462,7 +465,7 @@ import Editor from '@tinymce/tinymce-vue'
             obj2send.mailToCustomer = this.mailToCustomer;
             obj2send.mailToCustomerDesc = this.mailToCustomerDesc?.trim();
             obj2send.mailToCustomerInvoice = this.mailToCustomerInvoice;
-            obj2send.mailHtml = this.mailHtml;
+            obj2send.mailHtml = document.getElementById('mailContent').innerHTML;
 
             try {
                 let response = await $fetch(this.$config.bUrl + 'putOrderState.php', {

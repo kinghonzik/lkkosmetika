@@ -160,15 +160,14 @@ function UpdateOrderState()
       $message = "<html>
                   <head>
                   <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
-                  <style> .data-row { padding: 5px; } .t-cell { padding: 5px; } </style>
+                  <style> 
+                    .title { padding: 5px; } 
+                    .data-row { padding: 5px; } 
+                    .mail-content td, .mail-content th { padding: 5px; }
+                    .mail-contact { padding-top: 10px; } 
+                    .footer { padding: 5px;}</style>
                   </head>
                   <body>";
-      $message .= "<div class='data-row'> Objednávka číslo: " . $order->id . " </div>";
-      $message .= "<div class='data-row'>Stav: " . $order->state . " </div>";
-
-      if ($mailToCustomerDesc) 
-        $message .= "<div class='data-row'>" . $mailToCustomerDesc . "</div>";
-
       $message .= "\r\n";
       $message .= $mailHtml;
       $message .="</body></html>";

@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
   const SUPABASE_URL = 'url.supabase.co'
   const supabase = createClient(SUPABASE_URL, SUPABASE_KE*/
 
-  return await $fetch('http://localhost/backend-lkkoksmetika/putProduct.php', {
+  return await $fetch('http://localhost/lkkosmetika/backend-lkkoksmetika/putProduct.php', {
       method: 'PUT',
       body: JSON.stringify(body.product)
   });

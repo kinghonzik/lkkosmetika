@@ -3,9 +3,9 @@ import ProductImage from '@/models/productImage';
 class ProductData {
     title: string
     id: string
-    price?: number
+    price?: number = 100
     stockStatus: string = 'skladem'
-    manufacturer?: string
+    manufacturer?: string = 'bez-vyrobce'
     categories?: [string?] = []
     usages?: [object?] = []
     published: boolean = true

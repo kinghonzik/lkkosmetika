@@ -33,7 +33,7 @@ export default function () {
 
       public async tryLogin(user, pass) {
         try {
-          var responseStr = await $fetch('http://localhost/backend-lkkoksmetika/JWT/token-get.php', {
+          var responseStr = await $fetch('http://localhost/lkkosmetika/backend-lkkoksmetika/JWT/token-get.php', {
               method: 'POST',
               body: { user: user, pass: pass }
           });
@@ -54,7 +54,7 @@ export default function () {
 
       public async getNewToken() {
         try {
-          var responseStr = await $fetch('http://localhost/backend-lkkoksmetika/JWT/token-get-new.php', {
+          var responseStr = await $fetch('http://localhost/lkkosmetika/backend-lkkoksmetika/JWT/token-get-new.php', {
               method: 'POST',
               body: this.token
           });
