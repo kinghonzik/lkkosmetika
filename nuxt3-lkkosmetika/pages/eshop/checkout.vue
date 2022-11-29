@@ -429,12 +429,12 @@ export default {
                 totalPrice: this.totalPrice,
             }
 
-            var response = await $fetch('/api/data_order_post', {
-                method: 'POST',
-                body: { order: obj2send }
-            });
-
-            console.log(response);
+            try {
+                await $fetch(this.$config.bUrl + 'postOrder.php', { method: 'POST', body: JSON.stringify(obj2send)});
+            } catch(exception) {
+                alert('Došlo k nějaké chybě');
+                throw exception;
+            }
 
             if (response == 'true') {
                 this.cookie.clear();
@@ -496,11 +496,21 @@ export default {
         }
     }, 
     async mounted() {
-        const config = await $fetch('/api/data_config');
-        this.config = JSON.parse(config);
+        try {
+            this.config = JSON.parse(await $fetch(this.$config.bUrl + 'getConfig.php'));
+        } catch(exception) {
+            alert('Došlo k nějaké chybě');
+            throw exception;
+        }
+        try {
+          const data = await $fetch(this.$config.bUrl + 'getProducts.php');
+          const dataParsered = JSON.parse(data);
+          this.productsList = dataParsered;
+        } catch(exception) {
+            alert('Došlo k nějaké chybě');
+            throw exception;
+        }
 
-        const data = await $fetch('/api/data_products');
-        this.productsList = JSON.parse(data);
         this.cookie = await useCookie();
         const cookieProducts = this.cookie.getProducts();
 

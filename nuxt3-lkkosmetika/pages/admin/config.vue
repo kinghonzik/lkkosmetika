@@ -74,21 +74,36 @@
       },
       methods: {
         async configSaveAndReload() {
-          var response = await $fetch('/api/data_config_put', {
-              method: 'POST',
-              body: { config: this.config }
-          } );
-          this.config = JSON.parse(await $fetch('/api/data_config'));
+          try {
+            await $fetch(this.$config.bUrl + 'postConfig.php', { method: 'POST', body: this.config });
+          } catch(exception) {
+              alert('Došlo k nějaké chybě při ukládání configu!');
+              throw exception;
+          }
+          await this.fetchConfig();
         },
         async btClickUlozit() {
           this.configSaveAndReload();
         },
+        async fetchConfig() {
+          try {
+            this.config = JSON.parse(await $fetch(this.$config.bUrl + 'getConfig.php'));
+          } catch(exception) {
+              alert('Došlo k nějaké chybě při načítání configu!');
+              throw exception;
+          }
+        }
       },
       async mounted() {
-        const data = await $fetch('/api/data_products');
-        const dataParsered = JSON.parse(data);
-        this.productsList = dataParsered;
-        this.config = JSON.parse(await $fetch('/api/data_config'));
+        try {
+          const data = await $fetch(this.$config.bUrl + 'getProducts.php');
+          const dataParsered = JSON.parse(data);
+          this.productsList = dataParsered;
+        } catch(exception) {
+            alert('Došlo k nějaké chybě');
+            throw exception;
+        }
+        await this.fetchConfig();
         this.utils = useUtils();
       }
 

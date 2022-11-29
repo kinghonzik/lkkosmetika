@@ -149,19 +149,19 @@
           navigateTo('/admin/product/' + product.data.id)
         },
         async btClickDelete(product) {
-
           if (!window.confirm('Opravdu si přejete smazat produkt? Bude navždy pryč.'))
             return;
-
-          const response = await $fetch('/api/data_product_del', {
-                method: 'PUT',
-                body: { product: product }
-              });
-          if (response == 'true') {
-            await this.reloadProducts();
-            alert('Produkt byl smazán.')
-          } else {
-            alert('Smazání se nezdařilo. ' + response)
+          try {
+            const response = await $fetch(this.$config.bUrl + 'delProduct.php', {method: 'DELETE',body: JSON.stringify(product)});
+            if (response == 'true') {
+              await this.reloadProducts();
+              alert('Produkt byl smazán.')
+            } else {
+              alert('Smazání se nezdařilo. ' + response)
+            }
+          } catch(exception) {
+              alert('Došlo k nějaké chybě');
+              throw exception;
           }
         },
         filterManufacturerMethod() {

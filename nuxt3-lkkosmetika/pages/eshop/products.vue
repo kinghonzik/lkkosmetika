@@ -17,15 +17,20 @@
       methods: {
       },
       async mounted() {
-        const config = await $fetch('/api/data_config');
-        this.config = JSON.parse(config);
-        console.log(this.config);
-
-        console.log('mounted')
-        const data = await $fetch('/api/data_products');
-        const dataParsered = JSON.parse(data);
-        this.productsList = dataParsered;
-        console.log(this.productsList);
+        try {
+            this.config = JSON.parse(await $fetch(this.$config.bUrl + 'getConfig.php'));
+        } catch(exception) {
+            alert('Došlo k nějaké chybě');
+            throw exception;
+        }
+        try {
+          const data = await $fetch(this.$config.bUrl + 'getProducts.php');
+          const dataParsered = JSON.parse(data);
+          this.productsList = dataParsered;
+        } catch(exception) {
+            alert('Došlo k nějaké chybě');
+            throw exception;
+        }
       }
     })
 </script>

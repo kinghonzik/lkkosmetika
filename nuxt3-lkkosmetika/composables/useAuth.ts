@@ -1,10 +1,12 @@
 export default function () {
     class Auth {
+      private runTimeConfig = useRuntimeConfig();
+
       public token = '';
       public user = '';
       public expiration = '';
       public expirationLength = '';
-
+      
       public get isAuthenticated() {
         if (!this.token || !this.expiration || !this.user)
           return false;
@@ -33,7 +35,7 @@ export default function () {
 
       public async tryLogin(user, pass) {
         try {
-          var responseStr = await $fetch('http://localhost/lkkosmetika/backend-lkkoksmetika/JWT/token-get.php', {
+          var responseStr = await $fetch(this.runTimeConfig.bUrl + 'JWT/token-get.php', {
               method: 'POST',
               body: { user: user, pass: pass }
           });
@@ -54,7 +56,7 @@ export default function () {
 
       public async getNewToken() {
         try {
-          var responseStr = await $fetch('http://localhost/lkkosmetika/backend-lkkoksmetika/JWT/token-get-new.php', {
+          var responseStr = await $fetch(this.runTimeConfig.bUrl + 'JWT/token-get-new.php', {
               method: 'POST',
               body: this.token
           });

@@ -110,15 +110,24 @@
         }
       },
       async mounted() {
-        const config = await $fetch('/api/data_config');
-        this.config = JSON.parse(config);
+        try {
+            this.config = JSON.parse(await $fetch(this.$config.bUrl + 'getConfig.php'));
+        } catch(exception) {
+            alert('Došlo k nějaké chybě');
+            throw exception;
+        }
 
         const route = useRoute();
         const productName = route.params.product_name;
 
-        const data = await $fetch('/api/data_product?id=' + productName);
-        const dataParsered = JSON.parse(data);
-        this.product = dataParsered;
+        try {
+          const data = await $fetch(this.$config.bUrl + 'getProductByID.php?id=' + productName);
+          const dataParsered = JSON.parse(data);
+          this.product = dataParsered;
+        } catch(exception) {
+            alert('Došlo k nějaké chybě');
+            throw exception;
+        }
 
         // specifikace pro testovaci ucely
         //this.product.data.specifications = [{title: "mnozstvi", value: "15ml"},{title: "spec2", value: "18ks"}]

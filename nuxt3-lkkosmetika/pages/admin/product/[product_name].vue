@@ -273,31 +273,31 @@ import Editor from '@tinymce/tinymce-vue'
         methods: {
           async btClickSave() {
             if (this.formType == 'edit') {
-              var response = await $fetch('/api/data_product_put', {
-                method: 'PUT',
-                body: { product: this.product }
-              });
-
-              if (response == 'true') {
-                window.history.back();
-              } else{
-                alert('Něco se nepovedlo: ' + response);
-                console.log(response)
-                throw response;
+              try {
+                var response = await $fetch(this.$config.bUrl + 'putProduct.php', { method: 'PUT', body: {order: JSON.stringify(this.product)}}) 
+                if (response == 'true') {
+                  window.history.back();
+                } else{
+                  alert('Něco se nepovedlo: ' + response);
+                  throw response;
+                }
+              } catch(exception) {
+                  alert('Došlo k nějaké chybě');
+                  throw exception;
               }
             }
             if (this.formType == 'new') {
-              var response = await $fetch('/api/data_product_post', {
-                method: 'POST',
-                body: { product: this.product }
-              });
-
-              if (response == 'true') {
-                window.history.back();
-              } else{
-                alert('Něco se nepovedlo: ' + response);
-                console.log(response)
-                throw response;
+              try {
+                var response = await $fetch(this.$config.bUrl + 'postProduct.php', { method: 'POST', body: {order: JSON.stringify(this.product)}}) 
+                if (response == 'true') {
+                  window.history.back();
+                } else{
+                  alert('Něco se nepovedlo: ' + response);
+                  throw response;
+                }
+              } catch(exception) {
+                  alert('Došlo k nějaké chybě');
+                  throw exception;
               }
             }
           },
@@ -355,13 +355,20 @@ import Editor from '@tinymce/tinymce-vue'
           }
         },
         async mounted() {
-            const config = await $fetch('/api/data_config');
-            this.config = JSON.parse(config);
-
-            this.utils = useUtils();
-            const data = await $fetch('/api/data_products');
-            const dataParsered = JSON.parse(data);
-            this.productsList = dataParsered;
+            try {
+              this.config = JSON.parse(await $fetch(this.$config.bUrl + 'getConfig.php'));
+            } catch(exception) {
+                alert('Došlo k nějaké chybě');
+                throw exception;
+            }
+            try {
+              const data = await $fetch(this.$config.bUrl + 'getProducts.php');
+              const dataParsered = JSON.parse(data);
+              this.productsList = dataParsered;
+            } catch(exception) {
+                alert('Došlo k nějaké chybě');
+                throw exception;
+            }
 
             const route = useRoute();
             const productName = route.params.product_name;

@@ -496,7 +496,13 @@ import Editor from '@tinymce/tinymce-vue'
         },
     },
     async mounted() {
-        this.config = JSON.parse(await $fetch('/api/data_config'));
+        try {
+            this.config = JSON.parse(await $fetch(this.$config.bUrl + 'getConfig.php'));
+        } catch(exception) {
+            alert('Došlo k nějaké chybě');
+            throw exception;
+        }
+
         await this.fetchOrderData();
     }
   }
