@@ -23,3 +23,10 @@ h2 {
     background: rgba(0, 0, 0, 0.5);
     display: block !important;
 }
+
+.my-info-icon {
+    border: 1px solid black; 
+    border-radius: 100px; 
+    padding: 0px 7px; 
+    font-size: 80%;
+}

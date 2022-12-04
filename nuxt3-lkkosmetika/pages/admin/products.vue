@@ -33,8 +33,7 @@
       <div class="col-sm-3 item">
         <label> Filtr - výrobce </label>
         <select class="form-control form-control-sm" v-model="filterManufacturer" @change="filterManufacturerChanged()">
-          <option value="*">Všichni výrobci</option>
-          <option value="null">Bez výrobce</option>
+          <option value="*">Zobrazit vše</option>
           <option v-for="item in config?.manufacturers" :value="item.id">{{item.id}}</option>
         </select>
       </div>
@@ -55,7 +54,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item of products2View" class="product" :id="item.data.id" style="cursor: pointer" title="Kliknutím přejdete do editace" @click="btClickEditProduct(item)">
+        <tr v-for="item of products2View" class="product" :id="item.data.id" style="cursor: pointer" title="Kliknutím přejdete do editace" @click.self="btClickEditProduct(item)">
           <td>
             <div>
               <img :src="item.data.image ? '/img/products/' + item.data.image.src : '#'"/>

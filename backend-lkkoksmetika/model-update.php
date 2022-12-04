@@ -1,79 +1,7 @@
 <?php
 
 require_once 'DB.php';
-/*
-function UpdateBase($dbConn, $data, $tableName) 
-{
-  $sql = "UPDATE `" . $tableName . "` set data = ? WHERE id = ?";
-  $stmt= $dbConn->prepare($sql);
-  $result = $stmt->execute(array(json_encode($data->data), (int)$data->id));   
-}
-
-function UpdateManufacturer() 
-{
-  try {
-    $dbConn = DB::Get();
-    $dbConn->beginTransaction();
-    $data = json_decode(file_get_contents("php://input"));
-    $result = UpdateBase($dbConn, $data, 'manufacturer');
-    $dbConn->commit();
-    http_response_code(200);
-    echo json_encode(true);
-
-  } catch(Exception $e) {
-    $dbConn->rollback();
-    http_response_code(403);
-    echo json_encode($e);
-  }
-}
-
-function UpdateCategory() 
-{
-  try {
-    $dbConn = DB::Get();
-    $dbConn->beginTransaction();
-    $data = json_decode(file_get_contents("php://input"));
-    $result = UpdateBase($dbConn, $data, 'category');
-    $dbConn->commit();
-    http_response_code(200);
-    echo json_encode(true);
-
-  } catch(Exception $e) {
-    $dbConn->rollback();
-    http_response_code(403);
-    echo json_encode($e);
-  }
-}
-
-function UpdateUsage() 
-{
-  try {
-    $dbConn = DB::Get();
-    $dbConn->beginTransaction();
-    $data = json_decode(file_get_contents("php://input"));
-    $result = UpdateBase($dbConn, $data, 'usage');
-    $dbConn->commit();
-    http_response_code(200);
-    echo json_encode(true);
-
-  } catch(Exception $e) {
-    $dbConn->rollback();
-    http_response_code(403);
-    echo json_encode($e);
-  }
-}
-*/
-function updateImage($image) 
-{
-  $image_parts = explode(";base64,", $image->dataBase64String);
-  $imgDecoded = base64_decode($image_parts[1]);
-  file_put_contents(Config::IMG_FOLDER . $image->name, $imgDecoded);
-  $image->src = $image->name;
-  $image->savedOnServer = true;
-  unset($image->dataBase64String);
-  unset($image->name);
-  $image->status = null;
-}
+require_once 'file-functions.php';
 
 function UpdateProduct() 
 {
@@ -253,6 +181,28 @@ function UpdateConfig()
     $decodedData = json_decode($data);
     $dbConn->prepare("DELETE FROM `config`")->execute();
     $dbConn->prepare("INSERT INTO `config` VALUES(?)")->execute(array($data));
+
+    $dbConn->commit();
+    http_response_code(200);
+    echo json_encode(true);
+
+  } catch(Exception $e) {
+    $dbConn->rollback();
+    http_response_code(403);
+    echo json_encode($e);
+  }
+}
+
+
+function UpdateDocs() 
+{
+  try {
+    $dbConn = DB::Get();
+    $dbConn->beginTransaction();
+    $data = file_get_contents("php://input");
+    $decodedData = json_decode($data);
+    $dbConn->prepare("DELETE FROM `docs`")->execute();
+    $dbConn->prepare("INSERT INTO `docs` VALUES(?,?)")->execute(array($decodedData->conditions, $decodedData->GDPR));
 
     $dbConn->commit();
     http_response_code(200);

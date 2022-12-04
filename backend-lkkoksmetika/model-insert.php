@@ -3,18 +3,7 @@
 require_once 'DB.php';
 require_once 'config.php';
 require_once 'model-get.php';
-
-  function updateImage($image) 
-  {
-    $image_parts = explode(";base64,", $image->dataBase64String);
-    $imgDecoded = base64_decode($image_parts[1]);
-    file_put_contents(Config::IMG_FOLDER . $image->name, $imgDecoded);
-    $image->src = $image->name;
-    $image->savedOnServer = true;
-    unset($image->dataBase64String);
-    unset($image->name);
-    $image->status = null;
-  }
+require_once 'file-functions.php';
 
   function InsertProduct() 
   {
@@ -36,9 +25,8 @@ require_once 'model-get.php';
       $stmt= $dbConn->prepare($sql);
       $result = $stmt->execute(array(json_encode($product->data)));   
       $dbConn->commit();
-      $newId = $dbConn->lastInsertId();
       http_response_code(200);
-      echo json_encode($newId);
+      echo json_encode(true);
 
     } catch(Exception $e) {
       $dbConn->rollback();
@@ -67,7 +55,7 @@ require_once 'model-get.php';
       // validace tady
       $sql = "INSERT INTO `order` (`created`,`data`,`state`,`shipping`,`payment`,`paymentPrice`,`shippingPrice`,`productsPrice`,`totalPrice`,`sentEmails`) VALUES (?,?,?,?,?,?,?,?)";
       $stmt= $dbConn->prepare($sql);
-      $result = $stmt->execute(array($created, json_encode($data), $state, $shipping, $payment, $paymentPrice, $shippingPrice $productsPrice, $totalPrice, null));   
+      $result = $stmt->execute(array($created, json_encode($data), $state, $shipping, $payment, $paymentPrice, $shippingPrice, $productsPrice, $totalPrice, null));   
       //$dbConn->commit();
       http_response_code(200);
       echo json_encode(true);

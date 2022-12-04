@@ -1,5 +1,5 @@
 <template>
-    <div class="col-md-6" style="margin: auto; padding: 50px 0;">
+    <div class="col-md-6" style="margin: auto; padding: 50px 0; max-width: 600px;">
         <div style="text-align: center;"><h1>Admin sekce</h1></div>
         <form v-if="!error">
             <!-- Email input -->

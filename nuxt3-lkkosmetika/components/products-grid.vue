@@ -1,35 +1,6 @@
 <template>
     <div>
         <div v-if="config">
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <div class="collapse navbar-collapse">
-                    <ul class="navbar-nav mr-auto">
-                        <li class="nav-item dropdown" v-for="man in config.manufacturers">
-                            <template v-if="config.categories?.filter(itm => itm.manufacturer == man.id)?.length">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
-                                    {{man.title}}
-                                </a>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" v-for="cat in config.categories.filter(itm => itm.manufacturer == man.id)" href="#">{{cat.title}}</a>
-                                </div>
-                            </template>
-                            <template v-else>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#">{{man.title}}</a>
-                                </li>
-                            </template>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-
-            <div>
-                <div class="title">Použití</div>
-                <div class="form-check form-check-inline" v-for="item in config.usages">
-                    <input type="checkbox" class="form-check-input">
-                    <label class="form-check-label">{{item.title}}</label>
-                </div>
-            </div>
             <div class="product-list">
                 <div class="flex-container">
                     <div class="product flex-item" v-for="product in productsList" title="Kliknutím zobrazíte detail produktu." @click="btClickProduct(product)">
@@ -50,8 +21,8 @@
                                     <div v-else class="stock-status">
                                         <span :class="[product.data.stockStatus == 'skladem' ? 'green' : 'orange']">{{product.data.stockStatus}}</span>
                                     </div>
-                                    <div class="href-button" v-if="product.data.variants?.length"><a :id="'product-id-' + product.id" :href="'/eshop/' + product.data.id">Vybrat variantu</a></div>
-                                    <div class="href-button" v-else><a :id="'product-id-' + product.id" :href="'/eshop/' + product.data.id">Přejít na detail</a></div>
+                                    <div class="href-button" v-if="product.data.variants?.length"><a :id="'product-id-' + product.id" :href="'/eshop/product/' + product.data.id">Vybrat variantu</a></div>
+                                    <div class="href-button" v-else><a :id="'product-id-' + product.id" :href="'/eshop/product/' + product.data.id">Přejít na detail</a></div>
                                 </div>
                             </div>
                         </div>
@@ -91,7 +62,8 @@
 
 <style scoped>
     .product {
-        width: 280px;
+        /*width: 280px;*/
+        max-width: 374px;
         cursor: pointer;
         padding: 10px;
         margin:10px;
@@ -134,7 +106,7 @@
         flex: 1 2 auto;
         -webkit-align-self: center;
         -ms-flex-item-align: center;
-        align-self: stretch;
+        align-self: flex-start;
     }
 
     .flex-container-2nd {

@@ -12,6 +12,16 @@ function GetConfig()
   return json_decode($result->data);
 }
 
+function GetDocs()
+{
+  $dbConn = DB::Get();
+  $query = $dbConn->prepare("SELECT * FROM docs");
+  $query->execute();
+
+  $result = $query->fetch(PDO::FETCH_OBJ);
+  return $result;
+}
+
 function GetBase($dbConn, $tableName) {
   $query = $dbConn->prepare("SELECT * FROM `" . $tableName . "`");
   $success = $query->execute();
@@ -24,7 +34,6 @@ function GetBase($dbConn, $tableName) {
 
   return $records;
 }
-
 
 function GetProducts()
 {

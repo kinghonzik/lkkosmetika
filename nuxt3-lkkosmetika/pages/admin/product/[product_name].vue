@@ -13,8 +13,8 @@
               <input type="text" class="form-control" v-model="productTitle" />
             </div>
           </div>
-          <div class="form-group row">
-            <label class="col-sm-2 col-form-label">Alias </label>
+          <div class="form-group row" title="To bude v url adrese produktu">
+            <label class="col-sm-2 col-form-label">Alias <span class="my-info-icon" title="To bude v URL adrese produktu">i</span></label>
             <div class="col-sm-6">
               <input type="text" class="form-control" v-model="product.data.id"/>
             </div>
@@ -52,7 +52,7 @@
             <label class="col-sm-2 col-form-label">Výrobce </label>
             <div class="col-sm-3">
               <select class="form-control" v-model="product.data.manufacturer">
-                <option v-for="item in config?.manufacturers" :value="item.id">{{item.id}}</option>
+                <option v-for="item in config?.manufacturers" :value="item.id">{{item.title}}</option>
               </select>
             </div>
           </div>
@@ -60,7 +60,7 @@
         <div id="section_images" class="section-inline col-sm-12">
           <div class="form-group row">
             <label class="col-sm-2 col-form-label">Hlavní obrázek</label>
-            <div class="col-sm-7">
+            <div class="col-sm-6">
               <div class="custom-file">
                 <input type="file" class="custom-file-input" id="customFile" @change="imgUpload($event)">
                 <label class="custom-file-label" for="customFile">{{product.data.image.dataBase64String ? product.data.image.name : product.data.image.src }}</label>
@@ -70,8 +70,9 @@
           </div>
           <div class="form-group row">
             <label class="col-sm-2 col-form-label">Další obrázky</label>
-            <div class="col-sm-7">
-              <div style="margin-bottom: 10px;" v-for="(item, index) in product.data.additionalImages">
+            <div class="col-sm-6">
+              <div style="margin-bottom: 20px;" v-for="(item, index) in product.data.additionalImages">
+                <small> Obrázek č. {{index + 1}}</small>
                 <template v-if="item.status != 'delete'">
                   <div class="custom-file">
                     <input type="file" class="custom-file-input" :id="'img' + index" @change="imgUpload($event, index)">
@@ -79,7 +80,6 @@
                   </div>
                   <img v-if="item.src" :src="item.dataBase64String ? item.src : '/img/products/' + item.src"/>
                   <button 
-                    v-if="item.src"
                     @click="btClickRemoveImage(item, index)" 
                     class="btn btn-outline-danger btn-sm" 
                     style="margin: 10px 0 0 5px; float: right" title="zrušit obrázek"> ✘ 
@@ -227,18 +227,36 @@
             </div>
           </div>
         </div>
+        <div id="section_usages" class="col-sm-12">
+        <div class="title"> SEO </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label"> Title </label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="product.seoTitle" />
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label"> Description </label>
+          <div class="col-sm-10">
+            <textarea class="form-control" rows="3" v-model="product.seoDesc"></textarea>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label"> KeyWords </label>
+          <div class="col-sm-10">
+            <textarea class="form-control" rows="3" v-model="product.seoKeyWords"></textarea>
+          </div>
+        </div>
+      </div> 
       </div>
-
-
     </div>
 </template>
   
 <script>
-import Product from '/models/product.ts';
-import ProductImage from '/models/productImage.ts';
-import StockStatusList from '/models/stockStatusList';
+import Product from '/models/product.ts'
+import ProductImage from '/models/productImage.ts'
+import StockStatusList from '/models/stockStatusList'
 import Editor from '@tinymce/tinymce-vue'
-
     export default defineComponent({
         data() {
             return {
@@ -248,10 +266,9 @@ import Editor from '@tinymce/tinymce-vue'
               usagesChecked: [],
               categoriesChecked: [],
               utils: null,
-              productlIST: [],
+              productsList: [],
             }
         },
-        
         components: {
           'editor': Editor
         },
@@ -272,12 +289,40 @@ import Editor from '@tinymce/tinymce-vue'
         },
         methods: {
           async btClickSave() {
+            if (this.product.data.title?.trim().length < 4) {
+              alert('Název pruduktu musí mít alespoň 4 znaky!')
+              return
+            }
+            if (this.productsList.find(itm => itm.data.title == this.product.data.title && itm.id != this.product.id)) {
+              alert('Produkt se zadaným názvem již exituje!')
+              return
+            }
+            if (this.product.data.id?.length < 4) {
+              alert('Alias musí mít alespoň 4 znaky!')
+              return
+            }
+            if (this.productsList.find(itm => itm.data.id == this.product.data.id && itm.id != this.product.id)) {
+              alert('Produkt se zadaným aliasem již exituje!')
+              return
+            }
+            const invalidVariant = this.product.data.variants.find(itm => !itm.title?.trim() || isNaN(itm.price) || itm.price <= 0);
+            if (invalidVariant) {
+              alert('S variantou číslo: ' + (this.product.data.variants.indexOf(invalidVariant) + 1) + ' je něco v nepořádku - zkontrolujte zadaný název cenu.')
+              return
+            }
+            if(this.product.data.variants?.length == 0 && (isNaN(this.product.data.price) || this.product.data.price <= 0)) {
+              alert('Cena musí být >= 0')
+              return
+            }
             if (this.formType == 'edit') {
               try {
-                var response = await $fetch(this.$config.bUrl + 'putProduct.php', { method: 'PUT', body: {order: JSON.stringify(this.product)}}) 
-                if (response == 'true') {
+                console.log(this.product)
+                const obj2send = JSON.stringify(this.product);
+                var response = await $fetch(this.$config.bUrl + 'putProduct.php', { method: 'PUT', body: obj2send }) 
+                console.log(response);
+                if ('' + response == 'true') {
                   window.history.back();
-                } else{
+                } else {
                   alert('Něco se nepovedlo: ' + response);
                   throw response;
                 }
@@ -288,10 +333,12 @@ import Editor from '@tinymce/tinymce-vue'
             }
             if (this.formType == 'new') {
               try {
-                var response = await $fetch(this.$config.bUrl + 'postProduct.php', { method: 'POST', body: {order: JSON.stringify(this.product)}}) 
-                if (response == 'true') {
+                console.log(this.product)
+                const obj2send = JSON.stringify(this.product);
+                var response = await $fetch(this.$config.bUrl + 'postProduct.php', { method: 'POST', body: obj2send }) 
+                if ('' + response == 'true') {
                   window.history.back();
-                } else{
+                } else {
                   alert('Něco se nepovedlo: ' + response);
                   throw response;
                 }
@@ -340,13 +387,13 @@ import Editor from '@tinymce/tinymce-vue'
             const blobFile = event.target.files[0];
             if (arrIndex == undefined) {
               this.product.data.image.dataBase64String = await this.utils.blobToBase64(blobFile);
-              this.product.data.image.name = blobFile.name;
+              this.product.data.image.name = this.product.data.manufacturer + '/' + blobFile.name;
               this.product.data.image.src = URL.createObjectURL(blobFile);
               this.product.data.image.status = 'update';
               this.product.data.image.savedOnServer = false;
             } else {
               this.product.data.additionalImages[arrIndex].dataBase64String = await this.utils.blobToBase64(blobFile);
-              this.product.data.additionalImages[arrIndex].name = blobFile.name;
+              this.product.data.additionalImages[arrIndex].name = this.product.data.manufacturer + '/' + blobFile.name;
               this.product.data.additionalImages[arrIndex].src = URL.createObjectURL(blobFile);
               this.product.data.additionalImages[arrIndex].status = 'update';
               this.product.data.additionalImages[arrIndex].savedOnServer = false;
@@ -370,8 +417,10 @@ import Editor from '@tinymce/tinymce-vue'
                 throw exception;
             }
 
+            this.utils = useUtils();
             const route = useRoute();
             const productName = route.params.product_name;
+
             if (productName == 'newProduct') {
               this.product = new Product;
             } else {

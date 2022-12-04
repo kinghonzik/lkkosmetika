@@ -5,12 +5,10 @@
           :products="productsList" :config="config" :utils="utils" 
           @configSaveAndReload="configSaveAndReload()">
         </config-manufacturer>
-
         <config-category
           :products="productsList" :config="config" :utils="utils" 
           @configSaveAndReload="configSaveAndReload()">
         </config-category>
-
         <config-usage
           :products="productsList" :config="config" :utils="utils" 
           @configSaveAndReload="configSaveAndReload()">
@@ -30,11 +28,34 @@
                     <input class="form-control" type="text" v-model="config.priceUnit"/>
                   </td>
                 </tr>
+                <tr>
+                  <td>maily <span class="my-info-icon" title="Adresy na které budou chodit nové objednávky. 1 řádek = 1 adresa">i</span></td>
+                  <td>
+                    <textarea class="form-control" rows="3" v-model="config.mails"></textarea>
+                  </td>
+                </tr>
+                <tr>
+                  <td>mail - from <span class="my-info-icon" title="Adresa, ze které přijde mail zákazníkovi">i</span></td>
+                  <td>
+                    <input class="form-control" type="text" v-model="config.mailFrom"/>
+                  </td>
+                </tr>
+                <tr>
+                  <td>FB</td>
+                  <td>
+                    <input class="form-control" type="text" v-model="config.linkFacebook"/>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Instagram</td>
+                  <td>
+                    <input class="form-control" type="text" v-model="config.linkInstagram"/>
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
         </div>
-
         <div v-if="config" class="coltrol-panel">
           <button @click="btClickUlozit()" class="btn btn-success"> Uložit konfiguraci </button>
         </div>
@@ -62,20 +83,13 @@
           categories: null,
         }
       },
-      computed: {
-        manTitle: {
-          get() { return this.manObj?.title; },
-          set(newVal) { 
-            this.manObj.title = newVal;
-            if (this.manObj && this.manDialog == 'add')
-              this.manObj.id = this.utils.createStrId(this.manObj.title)
-          }
-        },
-      },
       methods: {
         async configSaveAndReload() {
           try {
-            await $fetch(this.$config.bUrl + 'postConfig.php', { method: 'POST', body: this.config });
+            const response = await $fetch(this.$config.bUrl + 'postConfig.php', { method: 'POST', body: this.config });
+            console.log(response)
+            if ('' +  response == 'true')
+              alert('Uloženo v pořádku.')
           } catch(exception) {
               alert('Došlo k nějaké chybě při ukládání configu!');
               throw exception;

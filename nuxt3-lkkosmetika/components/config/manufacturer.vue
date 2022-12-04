@@ -31,7 +31,8 @@
                 </button>
                 <button
                   @click="del(item)"
-                  title="smazat"
+                  :disabled="item.id == 'bez-vyrobce'"
+                  :title="item.id == 'bez-vyrobce' ? 'toto nelze smazat' : 'smazat'"
                   class="btn btn-outline-danger btn-sm"
                 >
                   ✘
