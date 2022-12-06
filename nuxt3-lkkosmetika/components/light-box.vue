@@ -149,4 +149,9 @@ export default {
   transform: scale(1.2)
 }
 
+button:focus {
+  border: none;
+  outline: none;
+}
+
 </style>

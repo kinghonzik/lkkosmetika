@@ -8,6 +8,5 @@
     .msg {
         text-align: center;
         padding: 100px 20px;
-
     }
 </style>

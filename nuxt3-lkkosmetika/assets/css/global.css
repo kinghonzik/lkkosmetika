@@ -30,3 +30,9 @@ h2 {
     padding: 0px 7px; 
     font-size: 80%;
 }
+
+input[type=checkbox]{
+    accent-color: #bdb76b;
+    width: 18px;
+    height: 18px;
+}

@@ -232,19 +232,19 @@
         <div class="form-group row">
           <label class="col-sm-2 col-form-label"> Title </label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" v-model="product.seoTitle" />
+            <input type="text" class="form-control" v-model="product.data.seoTitle" />
           </div>
         </div>
         <div class="form-group row">
           <label class="col-sm-2 col-form-label"> Description </label>
           <div class="col-sm-10">
-            <textarea class="form-control" rows="3" v-model="product.seoDesc"></textarea>
+            <textarea class="form-control" rows="3" v-model="product.data.seoDesc"></textarea>
           </div>
         </div>
         <div class="form-group row">
           <label class="col-sm-2 col-form-label"> KeyWords </label>
           <div class="col-sm-10">
-            <textarea class="form-control" rows="3" v-model="product.seoKeyWords"></textarea>
+            <textarea class="form-control" rows="3" v-model="product.data.seoKeywords"></textarea>
           </div>
         </div>
       </div> 

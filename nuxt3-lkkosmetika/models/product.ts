@@ -16,6 +16,9 @@ class ProductData {
     additionalImages?: [ProductImage?] = []
     variants?: [object?] = []
     specifications?: [object?] = []
+    seoTitle?: string
+    seoDesc?: string
+    seoKeywords?: string
 }
 
 export default class Product {

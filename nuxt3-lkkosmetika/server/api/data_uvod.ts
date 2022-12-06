@@ -11,7 +11,7 @@ export default defineEventHandler((event) => {
                 {
                   hid: `keywords`,
                   name: 'keywords',
-                  keywords: 'Kosmeticke osetreni \
+                  content: 'Kosmeticke osetreni \
                     Lifting \
                     Liftingove osetreni \
                     Chemicky peeling \

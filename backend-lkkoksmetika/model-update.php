@@ -17,7 +17,7 @@ function UpdateProduct()
       if ($item->status == 'delete' && $item->src)
         unlink(Config::IMG_FOLDER . $item->src);
     }
-    $product->data->additionalImages = array_filter($product->data->additionalImages, function($v, $k) { return $v->status != 'delete'; }, ARRAY_FILTER_USE_BOth);
+    $product->data->additionalImages = array_filter($product->data->additionalImages, function($v, $k) { return $v->status != 'delete'; }, ARRAY_FILTER_USE_BOTH);
     $sql = "UPDATE product set data = ? WHERE id = ?";
     $stmt= $dbConn->prepare($sql);
     $result = $stmt->execute(array(json_encode($product->data), (int)$product->id));   

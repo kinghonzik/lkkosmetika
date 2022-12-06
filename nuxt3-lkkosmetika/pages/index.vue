@@ -123,12 +123,13 @@
     }
     .gallery-image img {
       width: 360px;
-    height: 240px;
+      height: 240px;
       display: block;
-    padding: 0;
-    margin: 0;
-    border: none;
-    float: left;
-    padding: 1px;
+      padding: 0;
+      margin: 0;
+      border: none;
+      float: left;
+      padding: 1px;
     }
+
 </style>

@@ -1,5 +1,6 @@
 <template>
   <div>
+    <html-header :params="headerParams"></html-header>
     <cart></cart>
     <div v-if="product && config" class="product">
       <div v-if="false" class="title"><h1>{{product.data.title}}</h1></div>
@@ -14,7 +15,7 @@
         </div>
         <div class="flex-item">
           <div style="min-width: 320px; max-width: 400px; width=auto; margin: auto;">
-            <div v-if="true" style="font-size: 2rem; text-align: left;" class="title"><h1>{{product.data.title}}</h1></div>
+            <div v-if="true" style="text-align: left;" class="title"><h1 style="font-size: 2rem">{{product.data.title}}</h1></div>
             <div class="flex-container-2nd">
               <div class="flex-item-2nd" style="/*flex: 1 1 auto; -ms-flex: 1 1 auto; -webkit-flex: 1 1 auto;*/">
                 <table class="par-table">
@@ -41,7 +42,7 @@
                       <label for="pocet"><small style="font-style: italic;">počet:</small></label>
                       <input type="number" class="form-control" id="pocet" v-model="count">
                     </div>
-                    <div v-if="variant.stockStatus == 'skladem'" class="hrefbutton col-md-6" @click="btClickInsertToChart()">Vložit do košíku</div>
+                      <div v-if="variant.stockStatus == 'skladem'" class="hrefbutton col-md-7" @click="btClickInsertToChart()">Vložit do košíku</div>
                   </div>
                 </div>
                 <div v-else>
@@ -49,11 +50,26 @@
                     <span :class="[product.data.stockStatus == 'skladem' ? 'green' : 'orange']">{{product.data.stockStatus}}</span>
                 </div>
                   <div class="price">{{product.data.price}} {{config.priceUnit}}</div>
-                  <div class="hrefbutton" @click="btClickInsertToChart()">Vložit do košíku</div>
+                  <div class="row"> 
+                    <div class="form-group col-md-4">
+                      <label for="pocet"><small style="font-style: italic;">počet:</small></label>
+                      <input type="number" class="form-control" id="pocet" v-model="count">
+                    </div>
+                      <div v-if="product.data.stockStatus == 'skladem'" class="hrefbutton col-md-7" @click="btClickInsertToChart()">Vložit do košíku</div>
+                  </div>
+                </div>
+                <div v-if="showSuccessInsertMsg" class="successMsg">
+                  Produkt máte v košíku <span style="font-size: 200%">☺</span>
                 </div>
               </div>
             </div>
           </div>
+        </div>
+      </div>
+      <div v-if="product.data.usages?.length">
+        <div style="text-align: left; font-weight: 500; font-size: 120%;"> Použití </div>
+        <div v-for="item of product.data.usages" style="width: fit-content; padding: 5px 10px 0 0; display: inline-block;">
+          {{config.usages.find(itm => itm.id == item)?.title}} 
         </div>
       </div>
       <div class="flex-container">
@@ -80,9 +96,11 @@
           lightBoxStartIndex: 0,
           lightBoxVisible: false,
           cookie: null,
+          showSuccessInsertMsg: false,
         }
       },
       computed: {
+        title() {return this.product?.data.title ?? 'hovno'},
         galleryImages() {
           const arr = [];
           if (this.product.data.image?.src)
@@ -98,11 +116,18 @@
       methods: {
         btClickInsertToChart() {
           // vlozi do cookie pocet produktu
-          if (isNaN(this.count) || this.count < 1)
-            return;
-            
-          this.cookie.addProduct(this.product.id, this.count, this.variant?.title)
-          alert('Uspesne vlozeno do kosiku.')
+          try {
+            if (isNaN(this.count) || this.count < 1)
+              this.count = 1;
+              
+            this.cookie.addProduct(this.product.id, this.count, this.variant?.title)
+            this.showSuccessInsertMsg = true;
+          } catch (exception)
+          {
+            alert('Oops, něco se nepovedlo, nahlašte nám to prosím na informace. Děkujeme.')
+            console.error(exception)
+          }
+          setTimeout(() => { this.showSuccessInsertMsg = false}, 3000)
         },
         btClickLightbox(index) {
           this.lightBoxStartIndex = index;
@@ -140,6 +165,22 @@
         }
         this.cookie = useCookie();
 
+        // vygenerovani hlavicky
+        this.headerParams = {
+            title: this.product.data.seoTitle ?? this.product.data.title,
+            meta: [
+                {
+                  hid: `description`,
+                  name: 'description',
+                  content: this.product.data.seoDesc
+                },
+                {
+                  hid: `keywords`,
+                  name: 'keywords',
+                  content: this.product.data.seoKeywords
+                }
+            ],
+        }
       }
     })
 </script>
@@ -156,7 +197,7 @@
     }
 
     .product .par-table td {
-      padding: 5px 10px;
+      padding: 5px 10px 5px 0;
     }
     .product .par-table tr:tnth-child(1) {
       font-style: italic;
@@ -256,16 +297,19 @@
         max-height: 170px;
         display: inline-block;
         cursor: pointer;
+        margin-right: 2px;
+        margin-top: 2px;
     }
 
     .hrefbutton {
+        align-self: end;
         background-color: #bdb76b;
         padding: 8px 20px;
         color: white;
         font-weight: bold;
         text-align: center;
         margin-top: 5px;
-        border-radius: 25px;
+        border-radius: 2px;
         transition: 0.5s;
         border: 0;
         text-decoration: none;
@@ -302,5 +346,14 @@
     }
     .stock-status .green {
         color: MediumSeaGreen;
+    }
+
+    .successMsg {
+      text-align: center;
+      line-height: 20px;
+      color: MediumSeaGreen;
+      font-weight: 500;
+      border: 1px solid mediumseagreen;
+      padding: 10px;
     }
 </style>

@@ -7,15 +7,15 @@
               <li :class="['nav-item', 'dropdown', !selectedMan  ? 'selected' : '']">
                 <a :class="['nav-link', 'my-nav-link']"  href="#" @click="unselectAll(man)">Vše</a>
               </li>
-              <li :class="['nav-item', 'dropdown', selectedMan == man.id ? 'selected' : '']" 
+              <li :class="['nav-item', 'dropdown', selectedMan == man.id ? 'selected' : '']"
               v-for="man in config.manufacturers.filter(itm => itm.id != 'bez-vyrobce')"
-              @mouseover="hoverItem = man.id" @mouseleave="hoverItem = null">
-                  <template v-if="config.categories?.filter(itm => itm.manufacturer == man.id)?.length">
-                      <a class="nav-link dropdown-toggle my-nav-link" href="#" @click="changeMan(man)" role="button" aria-expanded="true">
+                @mouseover="hoverItem = man.id" @mouseleave="hoverItem = null">
+                  <template v-if="config.categories?.filter(itm => itm.manufacturer == man.id)?.length" @click="changeMan(man)">
+                      <a class="nav-link dropdown-toggle my-nav-link" href="#" role="button" aria-expanded="true">
                           {{man.title}}
                       </a>
                       <div v-if="hoverItem == man.id" class="dropdown-menu" style="display: block">
-                          <a class="dropdown-item my-dr-item" v-for="cat in config.categories.filter(itm => itm.manufacturer == man.id)" @click="changeCat(man, cat)" href="#">{{cat.title}}</a>
+                          <a class="nav-link dropdown-item my-nav-link" v-for="cat in config.categories.filter(itm => itm.manufacturer == man.id)" @click="changeCat(man, cat); hoverItem = null" href="#">{{cat.title}}</a>
                       </div>
                   </template>
                   <template v-else>
@@ -24,34 +24,18 @@
               </li>
           </ul>
         </nav>
-
-            <div>
-                <span :class="['dropdown', !selectedMan  ? 'selected' : '']">
-                  <a :class="['my-nav-link']"  href="#" @click="unselectAll(man)">Vše</a>
-                </span>
-                <span :class="['dropdown', selectedMan == man.id ? 'selected' : '']" 
-                v-for="man in config.manufacturers.filter(itm => itm.id != 'bez-vyrobce')"
-                @mouseover="hoverItem = man.id" @mouseleave="hoverItem = null">
-                    <template v-if="config.categories?.filter(itm => itm.manufacturer == man.id)?.length">
-                        <a class="dropdown-toggle my-nav-link" href="#" @click="changeMan(man)" role="button" aria-expanded="true">
-                            {{man.title}}
-                        </a>
-                        <div v-if="hoverItem == man.id" class="dropdown-menu" style="display: block">
-                            <a class="dropdown-item my-dr-item" v-for="cat in config.categories.filter(itm => itm.manufacturer == man.id)" @click="changeCat(man, cat)" href="#">{{cat.title}}</a>
-                        </div>
-                    </template>
-                    <template v-else>
-                        <a :class="['my-nav-link']"  href="#" @click="changeMan(man)">{{man.title}}</a>
-                    </template>
-                </span>
+        <div class="usages" v-if="usages.some(itm => itm.matches)">
+          <div class="title" style="font-weight: 500">Použití</div>
+          <template v-for="item in usages">
+            <div class="form-check form-check-inline" v-if="item.matches">
+              <input type="checkbox" class="form-check-input" :id="item.id" :checked="selectedUsages.includes(item.id)" @change="changeUsage(item)">
+              <label class="form-check-label" :for="item.id">{{item.title}} ({{item.matches}})</label>
             </div>
-
-        <div style="padding: 15px">
-          <div class="title" style="padding-bottom: 5px;">Použití</div>
-          <div class="form-check form-check-inline" v-for="item in config.usages">
-            <input type="checkbox" class="form-check-input" :checked="selectedUsages.includes(item.id)" @change="changeUsage(item)">
-            <label class="form-check-label">{{item.title}}</label>
-          </div>
+          </template>
+        </div>
+        <div v-if="category" class="cat-info">
+          <div class="title">{{category.title}}</div>
+          <div class="desc" style="padding-bottom: 5px;" v-if="category.description" v-html="category.description"></div>
         </div>
         <products-grid :productsList="filteredProducts" :config="config"></products-grid>
       </div>
@@ -71,6 +55,15 @@
           selectedCat: null,
           filteredProducts: [],
           hoverItem: null,
+          usages: []
+        }
+      },
+      computed: {
+        category() {
+          if (this.selectedCat && this.config) {
+            const fItem = this.config.categories.find(itm => itm.id == this.selectedCat);
+            return fItem;
+          }
         }
       },
       methods: {
@@ -114,10 +107,22 @@
             else 
               history.pushState({},null,this.$route.path + '?' + arr.join('&'));
 
-            this.filterProducts();
+            this.filteredProducts = this.getFilteredProducts();
+            this.updateUsagesMatches();
         },
-        filterProducts() {
-          this.filteredProducts = this.productsList.filter(item => { 
+        updateUsagesMatches() {
+          const fProducts = this.getFilteredProducts(false); // pocitame jen produkty zverejnene, filtrovane dle vyrobce a kategorie
+          for (let usage of this.usages) {
+            if (!fProducts || !fProducts.length) {
+              usage.matches = 0
+              continue;
+            }
+            const matchesCount = fProducts.filter(itm => itm.data.usages?.includes(usage.id))?.length ?? 0
+            usage.matches = matchesCount;
+          }
+        },
+        getFilteredProducts(evaluateUsages = true) {
+          const fProducts = this.productsList.filter(item => { 
             if(!item.data.published)
               return false;
 
@@ -127,19 +132,20 @@
             if (this.selectedCat && (!item.data.categories || !item.data.categories.includes(this.selectedCat)))
               return false;
 
-            if (this.selectedUsages.length > 0) { 
-              let hasMin1 = false;
-              for (const selUsage of this.selectedUsages) {
-                if(item.data.usages.includes(selUsage))
-                hasMin1 = true;
-              }
-
-              if (!hasMin1)
-                return false;
-            }
-              
+            if (evaluateUsages) {
+              if (this.selectedUsages.length > 0) { 
+                let hasMin1 = false;
+                for (const selUsage of this.selectedUsages) {
+                  if(item.data.usages.includes(selUsage))
+                  hasMin1 = true;
+                }
+                if (!hasMin1)
+                  return false;
+              }     
+            }      
             return true; 
           })
+          return fProducts;
         }
       },
       async mounted() {
@@ -147,9 +153,9 @@
         this.selectedCat = route.query.category ?? null;
         this.selectedMan = route.query.manufacturer ?? null;
         this.selectedUsages = route.query.usages?.split(';') ?? [];
-
         try {
             this.config = JSON.parse(await $fetch(this.$config.bUrl + 'getConfig.php'));
+            this.usages = JSON.parse(JSON.stringify(this.config.usages)); // deep copy
         } catch(exception) {
             alert('Došlo k nějaké chybě');
             throw exception;
@@ -162,13 +168,37 @@
             alert('Došlo k nějaké chybě');
             throw exception;
         }
-
-        this.filterProducts();
+        this.filteredProducts = this.getFilteredProducts();
+        this.updateUsagesMatches();
       }
     })
 </script>
 
 <style scoped>
+
+  .dropdown-item {
+    background-color: white;
+  }
+
+  .dropdown-item:hover {
+    color: white !important;
+    background: #bdb76b;
+  }
+
+  .cat-info,
+  .usages {
+    padding: 15px 20px;
+  }
+
+  .cat-info .title,
+  .usages .title {
+    padding-bottom: 5px;
+  }
+
+  .cat-info .title {
+    font-size: 140%;
+    font-weight: 500;
+  }
 
   .navbar {
     background: white;
@@ -178,30 +208,24 @@
     padding: 10px 20px;
     background: white;
     border: 1px solid #bdb76b;
-    /* border-radius: 50px; */
     margin-right: 8px;
     color: #bdb76b;
     font-weight: 500;
     font-size: 120%;
+    float: left;
   }
 
-  .navbar .nav-item.selected  {
+  .navbar .nav-item.selected,
+  .nav-item:hover  {
     background: #bdb76b;
-    border: 1px solid #bdb76b;
-    /* border-radius: 50px; */
     color: white;
   }
 
-  .my-nav-link {
-    color: #bdb76b !important;
+  .my-nav-link,
+  .nav-link {
+    color: inherit !important;
   }
 
-  .selected .my-nav-link {
-    color: white !important;
-  }
 
-  .my-dr-item {
-    color: #bdb76b !important;
-  }
 
 </style>

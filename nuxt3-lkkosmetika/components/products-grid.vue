@@ -62,7 +62,7 @@
 
 <style scoped>
     .product {
-        /*width: 280px;*/
+        width: 280px;
         max-width: 374px;
         cursor: pointer;
         padding: 10px;
@@ -104,9 +104,9 @@
         -webkit-flex: 1 2 auto;
         -ms-flex: 1 2 auto;
         flex: 1 2 auto;
-        -webkit-align-self: center;
-        -ms-flex-item-align: center;
-        align-self: flex-start;
+        -webkit-align-self: stretch;
+        -ms-flex-item-align: stretch;
+        align-self: stretch;
     }
 
     .flex-container-2nd {

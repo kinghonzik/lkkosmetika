@@ -2,7 +2,8 @@
     <section>
         <Head v-if="params">
             <Title>{{ params.title }}</Title>
-            <Meta v-if="description" name="description" :content="description" />
+            <Meta v-if="description" id="metaDescription" name="description" :content="description" />
+            <Meta v-if="keywords" id="keywords" name="keywords" :content="keywords" />
         </Head>
     </section>
 </template>
@@ -19,11 +20,10 @@
       },
       computed: {
         description() {
-          var descItm = this.params?.meta.find(itm => itm.name == 'description');
-          if (!descItm)
-            return null;
-            
-          return descItm.content;
+          return this.params?.meta.find(itm => itm.name == 'description')?.content ?? null;
+        },
+        keywords() {
+          return this.params?.meta.find(itm => itm.name == 'keywords')?.content ?? null;
         }
       },
       async mounted() {
