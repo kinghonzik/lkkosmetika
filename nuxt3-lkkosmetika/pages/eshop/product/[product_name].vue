@@ -2,8 +2,10 @@
   <div>
     <html-header :params="headerParams"></html-header>
     <cart></cart>
+      <div class="hrefbutton" @click="window.history.back()" style="width: fit-content">Zpět na seznam produktů </div>
+    
     <div v-if="product && config" class="product">
-      <div v-if="false" class="title"><h1>{{product.data.title}}</h1></div>
+      <div v-if="true" class="title"><h1 style="font-size: 2rem">{{product.data.title}}</h1></div>
       <div class="flex-container">
         <div class="flex-item">
           <div @click="btClickLightbox(0)">
@@ -15,12 +17,12 @@
         </div>
         <div class="flex-item">
           <div style="min-width: 320px; max-width: 400px; width=auto; margin: auto;">
-            <div v-if="true" style="text-align: left;" class="title"><h1 style="font-size: 2rem">{{product.data.title}}</h1></div>
+            <div v-if="false" style="text-align: left;" class="title"><h1 style="font-size: 2rem">{{product.data.title}}</h1></div>
             <div class="flex-container-2nd">
               <div class="flex-item-2nd" style="/*flex: 1 1 auto; -ms-flex: 1 1 auto; -webkit-flex: 1 1 auto;*/">
                 <table class="par-table">
                   <tr v-if="product.data.manufacturer">
-                    <td>výrobce: </td> <td style="font-style: italic;">{{product.data.manufacturer}}</td>
+                    <td>výrobce: </td> <td style="font-style: italic;">{{config.manufacturers.find(itm => itm.id == product.data.manufacturer).title ?? 'není znám'}}</td>
                   </tr>
                   <tr v-for="spec in product.data.specifications">
                     <td>{{spec.title}}: </td> <td style="font-style: italic;">{{spec.value}}</td>
@@ -37,12 +39,12 @@
                     <span :class="[variant.stockStatus == 'skladem' ? 'green' : 'orange']">{{variant.stockStatus}}</span>
                   </div>
                   <div class="price">{{variant.price ?? product.data.price}} {{config.priceUnit}}</div>
-                  <div class="row"> 
+                  <div class="row" v-if="variant.stockStatus == 'skladem'"> 
                     <div class="form-group col-md-4">
                       <label for="pocet"><small style="font-style: italic;">počet:</small></label>
                       <input type="number" class="form-control" id="pocet" v-model="count">
                     </div>
-                      <div v-if="variant.stockStatus == 'skladem'" class="hrefbutton col-md-7" @click="btClickInsertToChart()">Vložit do košíku</div>
+                      <div class="hrefbutton col-md-7" @click="btClickInsertToChart()">Vložit do košíku</div>
                   </div>
                 </div>
                 <div v-else>
@@ -50,12 +52,12 @@
                     <span :class="[product.data.stockStatus == 'skladem' ? 'green' : 'orange']">{{product.data.stockStatus}}</span>
                 </div>
                   <div class="price">{{product.data.price}} {{config.priceUnit}}</div>
-                  <div class="row"> 
+                  <div class="row" v-if="product.data.stockStatus == 'skladem'"> 
                     <div class="form-group col-md-4">
                       <label for="pocet"><small style="font-style: italic;">počet:</small></label>
                       <input type="number" class="form-control" id="pocet" v-model="count">
                     </div>
-                      <div v-if="product.data.stockStatus == 'skladem'" class="hrefbutton col-md-7" @click="btClickInsertToChart()">Vložit do košíku</div>
+                      <div class="hrefbutton col-md-7" @click="btClickInsertToChart()">Vložit do košíku</div>
                   </div>
                 </div>
                 <div v-if="showSuccessInsertMsg" class="successMsg">
@@ -100,6 +102,7 @@
         }
       },
       computed: {
+        window() { return window },
         title() {return this.product?.data.title ?? 'hovno'},
         galleryImages() {
           const arr = [];

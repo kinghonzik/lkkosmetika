@@ -69,42 +69,48 @@
       <button @click="openModalAdd()" style="font-size: 120%;" class="btn btn-outline-success btn-sm">+</button>
     </div>
 
-    <modal v-if="dialogType">
-      <div class="modal-header">
-        {{ dialogType == "add" ? "Pridat výrobce" : "Upravit výrobce" }}
-      </div>
-      <div class="modal-content">
-        <div>
-          <div class="form-group row">
-            <label class="col-sm-2 col-form-label">Název: </label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control" v-model="manTitle" />
+    <div v-if="dialogType" class="modal" tabindex="-1">
+      <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            {{ dialogType == "add" ? "Pridat výrobce" : "Upravit výrobce" }}
+          </div>
+          <div class="modal-content">
+            <div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Název: </label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" v-model="manTitle" />
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">ID </label>
+                <div class="col-sm-10">
+                  <input
+                    :disabled="(productsCount(newObj) > 0 || categoryCount(newObj) > 0) && dialogType == 'edit'"
+                    type="text"
+                    class="form-control"
+                    v-model="newObj.id"
+                  />
+                </div>
+                <div>
+                  <small v-if="(productsCount(newObj) > 0 || categoryCount(newObj) > 0) && dialogType == 'edit'" class="warning-small" style="padding-left: 15px"> 
+                    ID nelze změnit, protože má vazbu na produkt nebo kategorii
+                  </small>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="form-group row">
-            <label class="col-sm-2 col-form-label">ID </label>
-            <div class="col-sm-10">
-              <input
-                :disabled="(productsCount(newObj) > 0 || categoryCount(newObj) > 0) && dialogType == 'edit'"
-                type="text"
-                class="form-control"
-                v-model="newObj.id"
-              />
-            </div>
-            <div><small v-if="(productsCount(newObj) > 0 || categoryCount(newObj) > 0) && dialogType == 'edit'" class="warning-small" > ID nelze změnit, protože má vazbu</small></div>
+          <div class="modal-footer">
+            <button @click="dialogType = null" class="btn btn-danger">zrušit</button>
+            <button v-if="dialogType == 'add'" @click="add()" class="btn btn-success">
+              přidat
+            </button>
+            <button v-else @click="edit()" class="btn btn-success ">upravit</button>
           </div>
         </div>
       </div>
-      <div class="modal-footer">
-        <div class="" style="margin: auto">
-          <button v-if="dialogType == 'add'" @click="add()" class="btn btn-success">
-            přidat
-          </button>
-          <button v-else @click="edit()" class="btn btn-warning ">upravit</button>
-          <button @click="dialogType = null" class="btn btn-danger">zrušit</button>
-        </div>
-      </div>
-    </modal>
+    </div>
   </div>
 </template>
 

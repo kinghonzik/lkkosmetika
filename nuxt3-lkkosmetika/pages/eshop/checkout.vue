@@ -274,8 +274,11 @@
                             <td>
                                 <div :class="['custom-control', 'custom-radio', {'is-invalid': showErrors && payment == ''}]">
                                     <input type="radio" :id="'payment_' + index" name="payment-radio" class="custom-control-input" :value="item.id" v-model="payment" aria-describedby="paymentFeedback">
-                                    <label class="custom-control-label" :for="'payment_' + index">{{item.title}}</label>
+                                    <label class="custom-control-label" :for="'payment_' + index">
+                                        {{item.title}}
+                                    </label>
                                 </div>
+                                <small v-if="(item.hint && item.id == payment)" style="padding-left: 25px;">{{item.hint}}</small>
                             </td>
                             <td class="price">
                                 - {{item.price}} {{config.priceUnit}}
@@ -292,7 +295,10 @@
                             type="checkbox" value="" id="businessCond" aria-describedby="businessCondFeedback" 
                             v-model="consentBusinessConditions" required>
                         <label class="form-check-label" for="businessCond">
-                            Souhlasím s obchodními podmínkami
+                            
+                            <a href="/obchodni-podminky" target="_blank" alt="obdhodní podmínky" rel="nofollow" style="color: black; padding-left: 5px;" title="Zobrazit obchodní podmínky">
+                                Souhlasím s obchodními podmínkami
+                            </a>
                         </label>
                         <div id="businessCondFeedback" class="invalid-feedback">
                             Bez souhlasu nelze zboží objednat
@@ -305,7 +311,7 @@
                                 type="checkbox" value="" id="gdpr" aria-describedby="gdprFeedback" 
                             v-model="consentGDPR" required>
                         <label class="form-check-label" for="gdpr">
-                            Souhlasím se zpracováním osobních údajů (GDPR)
+                            <a href="/gdpr" target="_blank" alt="GDPR" rel="nofollow" style="color: black; padding-left: 5px;" title="Zobrazit GDPR" >Souhlasím se zpracováním osobních údajů (GDPR)</a>
                         </label>
                         <div  id="gdpr3Feedback" class="invalid-feedback">
                             Bez souhlasu nelze zboží objednat
@@ -315,8 +321,8 @@
                 </div>
                 <div class="section">
                     <div class="form-group">
-                        <label style="font-size: 95%;">Poznámka k objednávce</label>
-                        <textarea class="form-control" rows="5" v-model="customerDescription"></textarea>
+                        <label style="font-size: 95%;">Poznámka k objednávce <small>(max 1000 znaků)</small></label>
+                        <textarea class="form-control" rows="5" maxlength='1000' v-model="customerDescription"></textarea>
                     </div>
                     <div style="font-weight: 500; font-size: 130%; padding: 5px 0 20px 0;"> Celkem zaplatíte: {{totalPrice}} {{config.priceUnit}}</div>
                     <button class="btn btn-success" @click="btClickTrySend()" type="submit">Odeslat objednávku</button>

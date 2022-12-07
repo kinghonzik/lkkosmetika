@@ -58,14 +58,14 @@
                 </div>
             </div>
             <div v-show="order.sentEmails" class="section section-inline col-sm-6" style="max-height: 500px; overflow-x: auto;">
-                <div class="title"> Odeslané maily </div>
+                <div class="title" style="position: sticky;top: 0;background: white;border-bottom: 1px solid lightgray;"> Odeslané maily </div>
                 <table v-if="order.sentEmails" class="table table-striped">
                     <thead>
                     <tr>
                         <!--th>#</th-->
                         <th>Datum</th>
                         <th>Stav</th>
-                        <th>Faktura</th>
+                        <th v-if="false">Faktura</th>
                         <th>Poznámka</th>
                     </tr>
                     </thead>
@@ -74,11 +74,15 @@
                         <!--td>{{index + 1}}</td-->
                         <td>{{new Date(item.datetime).toLocaleString()}}</td>
                         <td>{{item.state}}</td>
-                        <td>{{item.invoice ? 'Ano' : 'Ne'}}</td>
+                        <td v-if="false">{{item.invoice ? 'Ano' : 'Ne'}}</td>
                         <td :title="item.desc">{{formatDesc(item.desc)}}</td>
                     </tr>
                     </tbody>
                 </table>
+            </div>
+            <div v-if="order.data.customerDescription" class="section section-inline col-sm-12">
+                <div class="title">Zákazníkova poznámka </div>
+                <div> {{order.data.customerDescription}}</div>
             </div>
             <div class="section col-sm-12">
                 <div class="title"> Produkty </div>
@@ -511,6 +515,10 @@ import Editor from '@tinymce/tinymce-vue'
 <style scoped>
 
 @import '~/assets/css/mail.css';
+
+    .page-content {
+        padding-bottom: 50px;
+    }
 
     .title {
       font-size: 180%;

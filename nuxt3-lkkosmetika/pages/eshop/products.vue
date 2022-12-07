@@ -5,23 +5,23 @@
         <nav class="navbar navbar-expand-lg navbar-light">
           <ul class="navbar-nav mr-auto" style="display: inline-block">
               <li :class="['nav-item', 'dropdown', !selectedMan  ? 'selected' : '']">
-                <a :class="['nav-link', 'my-nav-link']"  href="#" @click="unselectAll(man)">Vše</a>
+                <a :class="['nav-link', 'my-nav-link']"  href="#" rel="nofollow" @click="unselectAll(man)">Vše</a>
               </li>
-              <li :class="['nav-item', 'dropdown', selectedMan == man.id ? 'selected' : '']"
-              v-for="man in config.manufacturers.filter(itm => itm.id != 'bez-vyrobce')"
-                @mouseover="hoverItem = man.id" @mouseleave="hoverItem = null">
-                  <template v-if="config.categories?.filter(itm => itm.manufacturer == man.id)?.length" @click="changeMan(man)">
-                      <a class="nav-link dropdown-toggle my-nav-link" href="#" role="button" aria-expanded="true">
-                          {{man.title}}
-                      </a>
-                      <div v-if="hoverItem == man.id" class="dropdown-menu" style="display: block">
-                          <a class="nav-link dropdown-item my-nav-link" v-for="cat in config.categories.filter(itm => itm.manufacturer == man.id)" @click="changeCat(man, cat); hoverItem = null" href="#">{{cat.title}}</a>
-                      </div>
-                  </template>
-                  <template v-else>
-                      <a :class="['nav-link', 'my-nav-link']"  href="#" @click="changeMan(man)">{{man.title}}</a>
-                  </template>
-              </li>
+              <template v-for="man in config.manufacturers.filter(itm => itm.id != 'bez-vyrobce')">
+                <li :class="['nav-item', 'dropdown', selectedMan == man.id ? 'selected' : '']" @mouseover="hoverItem = man.id" @mouseleave="hoverItem = null">
+                    <template v-if="config.categories?.filter(itm => itm.manufacturer == man.id)?.length">
+                        <a class="nav-link dropdown-toggle my-nav-link" href="#" role="button" rel="nofollow" aria-expanded="true" @click="changeMan(man)">
+                            {{man.title}}
+                        </a>
+                        <div v-if="hoverItem == man.id" class="dropdown-menu" style="display: block">
+                            <a class="nav-link dropdown-item my-nav-link" v-for="cat in config.categories.filter(itm => itm.manufacturer == man.id)" @click.self="changeCat(man, cat); hoverItem = null" href="#">{{cat.title}}</a>
+                        </div>
+                    </template>
+                    <template v-else>
+                        <a :class="['nav-link', 'my-nav-link']"  href="#" rel="nofollow" @click="changeMan(man)">{{man.title}}</a>
+                    </template>
+                </li>
+              </template>
           </ul>
         </nav>
         <div class="usages" v-if="usages.some(itm => itm.matches)">
@@ -213,6 +213,7 @@
     font-weight: 500;
     font-size: 120%;
     float: left;
+    border-radius: 2px;
   }
 
   .navbar .nav-item.selected,

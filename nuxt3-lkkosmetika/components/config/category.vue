@@ -64,72 +64,72 @@
       <button @click="openModalAdd()" style="font-size: 120%;" class="btn btn-outline-success btn-sm">+</button>
     </div>
 
-    <modal v-if="dialogType">
-      <div class="modal-header">
-        {{ dialogType == "add" ? "Přidat kategorii" : "Upravit kategorii" }}
-      </div>
-      <div class="modal-content">
-        <div>
-          <div class="form-group row">
-            <label class="col-sm-3 col-form-label">Název: </label>
-            <div class="col-sm-9">
-              <input type="text" class="form-control" v-model="catTitle" />
+    <div v-if="dialogType" class="modal" tabindex="-1">
+      <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            {{ dialogType == "add" ? "Přidat kategorii" : "Upravit kategorii" }}
+          </div>
+          <div class="modal-body">
+            <div>
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Název: </label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" v-model="catTitle" />
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">ID</label>
+                <div class="col-sm-9">
+                  <input
+                    :disabled="productsCount(newObj) > 0 && dialogType== 'edit'"
+                    type="text"
+                    class="form-control"
+                    v-model="newObj.id"
+                  />
+                </div>
+                <div><small v-if="productsCount(newObj) > 0 && dialogType== 'edit'" class="warning-small" style="padding-left: 15px;" > ID nelze změnit, protože má vazbu na produkt</small></div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Výrobce: </label>
+                <div class="col-sm-9">
+                  <select class="form-control" v-model="newObj.manufacturer">
+                    <option v-for="man in config.manufacturers" :value="man.id">{{man.id}}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Popis: </label>
+                <div class="col-sm-9">
+                  <!--textarea class="form-control" rows="8" v-model="newObj.description"></textarea-->
+                  <editor :init="{ 
+                      height: 400, 
+                      plugins: [
+                        'advlist', 'autolink', 'link', 'image', 'lists', 'charmap', 'preview', 'anchor', 'pagebreak',
+                        'searchreplace', 'wordcount', 'visualblocks', 'visualchars', 'code', 'fullscreen', 'insertdatetime',
+                        'media', 'table', 'emoticons', 'template', 'help'
+                      ],
+                      toolbar: 'undo redo | styles | bold italic | alignleft aligncenter alignright alignjustify | ' +
+                        'bullist numlist outdent indent | link image | print preview media fullscreen | ' +
+                        'forecolor backcolor emoticons | help',
+                      menu: {
+                        favs: { title: 'My Favorites', items: 'code visualaid | searchreplace | emoticons' }
+                      }
+                    }" 
+                    v-model="newObj.description" 
+                  />
+                </div>
+              </div>
             </div>
           </div>
-          <div class="form-group row">
-            <label class="col-sm-3 col-form-label">ID </label>
-            <div class="col-sm-9">
-              <input
-                :disabled="productsCount(newObj) > 0 && dialogType== 'edit'"
-                type="text"
-                class="form-control"
-                v-model="newObj.id"
-              />
-            </div>
-            <div><small v-if="productsCount(newObj) > 0 && dialogType== 'edit'" class="warning-small" > ID nelze změnit, protože má vazbu</small></div>
-          </div>
-          <div class="form-group row">
-            <label class="col-sm-3 col-form-label">Výrobce: </label>
-            <div class="col-sm-9">
-              <select class="form-control" v-model="newObj.manufacturer">
-                <option v-for="man in config.manufacturers" :value="man.id">{{man.id}}</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-group row">
-            <label class="col-sm-3 col-form-label">Popis: </label>
-            <div class="col-sm-9">
-              <!--textarea class="form-control" rows="8" v-model="newObj.description"></textarea-->
-              <editor :init="{ 
-                  height: 400, 
-                  plugins: [
-                    'advlist', 'autolink', 'link', 'image', 'lists', 'charmap', 'preview', 'anchor', 'pagebreak',
-                    'searchreplace', 'wordcount', 'visualblocks', 'visualchars', 'code', 'fullscreen', 'insertdatetime',
-                    'media', 'table', 'emoticons', 'template', 'help'
-                  ],
-                  toolbar: 'undo redo | styles | bold italic | alignleft aligncenter alignright alignjustify | ' +
-                    'bullist numlist outdent indent | link image | print preview media fullscreen | ' +
-                    'forecolor backcolor emoticons | help',
-                  menu: {
-                    favs: { title: 'My Favorites', items: 'code visualaid | searchreplace | emoticons' }
-                  }
-                }" 
-                v-model="newObj.description" 
-              />
-            </div>
+          <div class="modal-footer">
+            <button @click="dialogType = null" class="btn btn-danger">zrušit</button>
+            <button v-if="dialogType == 'add'" @click="add()" class="btn btn-success">přidat</button>
+            <button v-else @click="edit()" class="btn btn-success ">upravit</button>
           </div>
         </div>
       </div>
-      <div class="modal-footer">
-        <div class="" style="margin: auto">
-          <button v-if="dialogType == 'add'" @click="add()" class="btn btn-success">
-            přidat
-          </button>
-          <button v-else @click="edit()" class="btn btn-warning ">upravit</button>
-          <button @click="dialogType = null" class="btn btn-danger">zrušit</button>
-        </div>
-      </div>
-    </modal>
+    </div>
   </div>
 </template>
   

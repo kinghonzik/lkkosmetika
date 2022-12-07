@@ -12,9 +12,9 @@ function UpdateProduct()
       updateImage($product->data->image);
     }
     foreach ($product->data->additionalImages as $item) {
-      if ($item->status == 'update')
+      if (isSet($item->status) && $item->status == 'update')
         updateImage($item);
-      if ($item->status == 'delete' && $item->src)
+      if (isSet($item->status) && $item->status == 'delete' && $item->src)
         unlink(Config::IMG_FOLDER . $item->src);
     }
     $product->data->additionalImages = array_filter($product->data->additionalImages, function($v, $k) { return $v->status != 'delete'; }, ARRAY_FILTER_USE_BOTH);

@@ -425,19 +425,20 @@ import Editor from '@tinymce/tinymce-vue'
               this.product = new Product;
             } else {
                 try {
-                const productObj = this.productsList.find(itm => itm.data.id == productName);
-                if (!productObj)
-                  throw ('Produkt ' + productName + ' nenalezen!')
-                
-                this.product = new Product; 
-                this.product = Object.assign(this.product, productObj);
-                
-                this.formType = 'edit';
+                  const productObj = this.productsList.find(itm => itm.data.id == productName);
+                  if (!productObj)
+                    throw ('Produkt ' + productName + ' nenalezen!')
+                  
+                  this.product = new Product(productObj);
+                  this.formType = 'edit';
                 } catch(error) {
                     alert(error)
                     throw error;
                 }
             }
+
+            console.log(this.product)
+            console.log(new Product);
             
             // usages
             const usages = [];

@@ -169,7 +169,7 @@
         font-weight: bold;
         text-align: center;
         margin-top: 5px;
-        border-radius: 25px;
+        border-radius: 2px;
         transition: 0.5s;
         border: 0;
         font-weight: 500;

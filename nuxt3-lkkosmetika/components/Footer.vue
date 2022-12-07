@@ -1,10 +1,16 @@
 <template>
     <div class="footer">
-        <div class="soc_icons_box">
-            <ul class="soc_icons">
-                <li><a href="https://www.facebook.com/Kosmetika-Pardubice-111444871170600" class="fab fa-facebook" target="_blank" rel="dofollow"></a></li>
-                <li><a href="https://www.instagram.com/kosmetika.pardubice/" class="fab fa-instagram" target="_blank" rel="dofollow"></a></li>
-            </ul>
+        <div class="soc_icons_box" v-if="config" style="text-align: center; padding-top: 10px;">
+            <div v-if="config.linkFacebook" class="logo-border">
+                <a :href="config.linkFacebook" target="_blank" rel="dofollow" title="Facebook profil">
+                    <img class="logo" src="~/assets/img/facebook.png" alt="Facebook logo" width="30" height="30"/>
+                </a>
+            </div>
+            <div v-if="config.linkInstagram" class="logo-border">
+                <a :href="config.linkInstagram" target="_blank" rel="dofollow" title="Instagram profil">
+                    <img class="logo" src="~/assets/img/instagram2.png" alt="Instagram logo" width="30" height="30"/>
+                </a>
+            </div>
         </div>
         <div class="footer-flex-container">
             <div class="footer-flex-item">
@@ -14,7 +20,17 @@
                 </div>
                 <div class="desc">
                     <div>info@lkkosmetika.cz</div>
+                </div>
+                <div class="desc">
                     <div>Tel: +420 731 481 191</div>
+                </div>
+                <div style="color: white; text-align: center;" >
+                    <div class="col-sm-12" style="display: inline-block; padding-top: 10px;">
+                        <a href="/gdpr" target="_blank" alt="GDPR" rel="nofollow" style="color: white">Zpracování osobních údajů</a>
+                    </div>
+                    <div class="col-sm-12" style="display: inline-block; padding-top: 10px">
+                        <a href="/obchodni-podminky" target="_blank" alt="obchodní podmínky" rel="nofollow" style="color: white">Obchodní podmínky</a>
+                    </div>
                 </div>
             </div>
             <div style="text-align: center" class="footer-flex-item">
@@ -27,19 +43,54 @@
                 <div class="desc">
                     <div class="a-border"><a href="/kosmetika" rel="dofollow">KOSMETICKÉ SLUŽBY</a></div>
                     <div class="a-border"><a href="/pedikura" rel="dofollow">PEDIKÚRA</a></div>
-                    <div class="a-border"><a href="/mezoterapie" rel="dofollow">MEZOTHERAPY</a></div>
+                    <div class="a-border"><a href="/mezoterapie" rel="dofollow">MEZOTHERAPIE</a></div>
                     <div class="a-border"><a href="/brow-lash-bar" rel="dofollow">BROW &amp; LASH BAR</a></div>
                     <div class="a-border"><a href="/depilace" rel="dofollow">DEPILACE</a></div>
                 </div>
             </div>
         </div>
         <div class="copyright">
-            LK cosmetics  ©&nbsp;2022&nbsp;Lucie Kováříková
+            LK cosmetics  ©&nbsp;{{currentYear}}&nbsp;Lucie Kováříková
         </div>    
     </div>
 </template>
 
+<script>
+    export default defineComponent({
+      data() {
+        return {
+          config: null,
+          currentYear: new Date().getFullYear(),
+        }
+      },
+      methods: {
+      },
+      async mounted() {
+        try {
+            this.config = JSON.parse(await $fetch(this.$config.bUrl + 'getConfig.php'));
+        } catch(exception) {
+            alert('Došlo k nějaké chybě při načítání dat.');
+            throw exception;
+        }
+      }
+
+    })
+</script>
+
 <style scoped>
+
+.title {
+    padding-top: 0;
+}
+.logo-border {
+    width: fit-content; 
+    display: inline-block; 
+    padding: 5px
+}
+
+.logo-border:hover {
+    zoom: 110%
+}
 
 .footer {
     background: #151515;
@@ -70,7 +121,7 @@
     -ms-flex-align: start;
     align-items: flex-start;
 
-    padding-bottom: 4em;
+    padding-bottom: 1em;
     max-width: 1200px;
     margin: auto;
 }
@@ -93,25 +144,27 @@
     text-align: center;
     padding: 0.7em;;
     font-size: 16px;
-    padding-top: 2em;
+    padding-top: 0;
 }
 
 .footer-flex-container .desc {
-    color: #777;
+    color: rgb(172, 166, 166);
     text-align: center;
-    padding: 0.7em;
-    font-size: 14px;
+    padding: 0.2em;
+    font-size: 1em;
     line-height: 1.6667em;
-    font-family: Montserrat,sans-serif;
     -webkit-text-size-adjust: 100%;
+}
+
+.footer-flex-container .a-border {
+    padding-bottom: 0.5em;
 }
 
 .footer-flex-container .a-border a {
     text-decoration: none;
-    color: #777;
-    font-size: 14px;
+    color: rgb(172, 166, 166);
+    font-size: 0.95em;
     line-height: 1.6667em;
-    font-family: Montserrat,sans-serif;
     -webkit-text-size-adjust: 100%;
 }
 

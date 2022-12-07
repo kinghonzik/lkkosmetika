@@ -20,6 +20,6 @@ export default {
         }
     },
     publicRuntimeConfig: {
-        bUrl: process.env.NODE_ENV === 'production' ? 'http://localhost/lkkosmetika/backend-lkkoksmetika/' : 'http://localhost:3080/lkkosmetika/backend-lkkoksmetika/',
+        bUrl: process.env.NODE_ENV === 'production' ? 'http://localhost/lkkosmetika/backend-lkkoksmetika/' : 'http://localhost/lkkosmetika/backend-lkkoksmetika/',
     }
 }
