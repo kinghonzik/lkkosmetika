@@ -28,17 +28,14 @@
 
 <style scoped>
     @import '~/assets/css/article-content.css';
-
     .content {
         padding: 15px 0px 30px 30px;
     }
-
     table td  {
         font-size: 11pt;
 
         padding: 10px 20px 5px 0;
     }
-
     table td:nth-child(1) {
         font-weight: bold;
     }

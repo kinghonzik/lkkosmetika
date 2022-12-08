@@ -347,6 +347,7 @@
     .stock-status .orange {
         color: Orange;
     }
+    
     .stock-status .green {
         color: MediumSeaGreen;
     }

@@ -286,7 +286,6 @@
 </script>
 
 <style scoped>
-
   .product img {
     max-width: 120px;
     max-height: 120px;

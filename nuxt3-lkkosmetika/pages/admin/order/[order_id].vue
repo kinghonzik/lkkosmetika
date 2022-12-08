@@ -209,67 +209,52 @@
                     </tbody>
                 </table>
             </div>
-            <Modal v-if="stateDialog" style="z-index: 10">
-                <div class="modal-title">Změna statusu</div>
-                <div class="form-group row">
-                    <label class="col-sm-4 col-form-label">Stav objednávky</label>
-                    <div class="col-sm-8">
-                        <select class="form-control" v-model="newState">
-                            <option v-for="item in orderStates" :value="item.title">{{item.title}}</option>
-                        </select>
+            <div v-if="stateDialog" class="modal" tabindex="-1">
+                <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header" style="font-size: 150%">Změna stavu</div>
+                        <div class="modal-body">
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Stav objednávky</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" v-model="newState">
+                                        <option v-for="item in orderStates" :value="item.title">{{item.title}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row" style="padding-left: 15px;">
+                                <div class="form-check">
+                                    <input :class="['form-check-input']" 
+                                        type="checkbox" id="sendMsgCustomer" 
+                                        v-model="mailToCustomer" required>
+                                    <label class="form-check-label" for="sendMsgCustomer">Odeslat zprávu o stavu objednáky zákazníkovi</label>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Poznámka</label>
+                                <div class="col-sm-8">
+                                    <textarea class="form-control" v-model="mailToCustomerDesc" :disabled="mailToCustomer == false"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group row" style="padding-left: 15px;">
+                                <div class="form-check">
+                                    <input :class="['form-check-input']" 
+                                        type="checkbox" id="sendMsgCustomer" 
+                                        v-model="mailToCustomerInvoice" required>
+                                    <label class="form-check-label" for="sendMsgCustomer">Odeslat zákazníkovi fakturu v příloze (ještě nemáme doprogramovaný)</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer" style="justify-content: left">
+                            <button @click="stateDialog = false" class="btn btn-danger">Zavřít</button>
+                            <button @click="btClickChangeState()" class="btn btn-success" style="margin-left: 10px;">Ok</button>
+                        </div>
                     </div>
                 </div>
-                <div class="form-group row" style="padding-left: 15px;">
-                    <div class="form-check">
-                        <input :class="['form-check-input']" 
-                            type="checkbox" id="sendMsgCustomer" 
-                            v-model="mailToCustomer" required>
-                        <label class="form-check-label" for="sendMsgCustomer">Odeslat zprávu o stavu objednáky zákazníkovi</label>
-                    </div>
-                </div>
-                <!--div class="form-group row" v-if="mailToCustomer">
-                    <label class="col-sm-12 col-form-label"> Mail</label>
-                    <div class="col-sm-12">
-                    <editor :init="{ 
-                        height: 500, 
-                        plugins: [
-                            'advlist', 'autolink', 'link', 'image', 'lists', 'charmap', 'preview', 'anchor', 'pagebreak',
-                            'searchreplace', 'wordcount', 'visualblocks', 'visualchars', 'code', 'fullscreen', 'insertdatetime',
-                            'media', 'table', 'emoticons', 'template', 'help'
-                        ],
-                        toolbar: 'undo redo | styles | bold italic | alignleft aligncenter alignright alignjustify | ' +
-                            'bullist numlist outdent indent | link image | print preview media fullscreen | ' +
-                            'forecolor backcolor emoticons | help',
-                        menu: {
-                            favs: { title: 'My Favorites', items: 'code visualaid | searchreplace | emoticons' }
-                        }
-                        }" 
-                        v-model="mailHtml" 
-                    >
-                    
-                    </editor>
-                    </div>
-                </div-->
-                <div class="form-group row">
-                    <label class="col-sm-4 col-form-label">Poznámka</label>
-                    <div class="col-sm-8">
-                        <textarea class="form-control" v-model="mailToCustomerDesc" :disabled="mailToCustomer == false"></textarea>
-                    </div>
-                </div>
-                <div class="form-group row" style="padding-left: 15px;">
-                    <div class="form-check">
-                        <input :class="['form-check-input']" 
-                            type="checkbox" id="sendMsgCustomer" 
-                            v-model="mailToCustomerInvoice" required>
-                        <label class="form-check-label" for="sendMsgCustomer">Odeslat zákazníkovi fakturu v příloze (ještě nemáme doprogramovaný)</label>
-                    </div>
-                </div>
-                <button @click="stateDialog = false" class="btn btn-danger">Zavřít</button>
-                <button @click="btClickChangeState()" class="btn btn-success" style="margin-left: 10px;">Ok</button>
-            </Modal>
-            <div v-show="false" id="mailContent">
+            </div>
+            <div v-show="true" id="mailContent">
                 <div class="mail-content">
-                    <div class='title'> Dobrý den vážený zákazníku </div>
+                    <div class='title test-mail'> Dobrý den vážený zákazníku </div>
                     <div class='data-row'> Stav vaší objednávky byl změněn na: <b>{{order.state}}</b></div>
                     <div class='data-row'>Objednávka číslo: {{order.id}} </div>
                     <div class='data-row' >{{mailToCustomerDesc}}</div>
@@ -507,6 +492,14 @@ import Editor from '@tinymce/tinymce-vue'
             throw exception;
         }
 
+        // styly pro mail
+        const link = document.createElement( "link" );
+            link.href = this.$config.mailCss;
+            link.type = "text/css";
+            link.rel = "stylesheet";
+            link.media = "screen,print";
+        document.getElementsByTagName("head")[0].appendChild(link);
+
         await this.fetchOrderData();
     }
   }
@@ -514,7 +507,7 @@ import Editor from '@tinymce/tinymce-vue'
 
 <style scoped>
 
-@import '~/assets/css/mail.css';
+/*@import '~/assets/css/mail.css';*/
 
     .page-content {
         padding-bottom: 50px;
