@@ -55,7 +55,7 @@ require_once 'JWT/jwt-lib.php';
       $dbConn = DB::Get();
       $sql = "INSERT INTO `errors` (`type`,`msg`) VALUES (?, ?)";
       $stmt = $dbConn->prepare($sql);
-      $result = $stmt->execute(array($message, $type));   
+      $result = $stmt->execute(array($type, $message));   
       return true;
 
     } catch(Exception $e) {
