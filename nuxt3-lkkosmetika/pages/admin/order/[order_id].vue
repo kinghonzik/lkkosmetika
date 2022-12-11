@@ -11,13 +11,13 @@
             <div class="section section-inline col-sm-6">
                 <div class="title"> Základní informace </div>
                 <div class="form-group row">
-                    <label class="col-sm-4 col-form-label">Stav </label>
+                    <label class="col-sm-4 col-form-label">Stav</label>
                     <div class="col-sm-8">
                         <input type="text" class="form-control" v-model="order.state" disabled />
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-sm-4 col-form-label">Vytvořeno </label>
+                    <label class="col-sm-4 col-form-label">Vytvořeno</label>
                     <div class="col-sm-8">
                         <input type="text" class="form-control" :value="new Date(order.created).toLocaleString()" disabled />
                     </div>
@@ -236,7 +236,7 @@
                                     <textarea class="form-control" v-model="mailToCustomerDesc" :disabled="mailToCustomer == false"></textarea>
                                 </div>
                             </div>
-                            <div class="form-group row" style="padding-left: 15px;">
+                            <div v-show="false" class="form-group row" style="padding-left: 15px;">
                                 <div class="form-check">
                                     <input :class="['form-check-input']" 
                                         type="checkbox" id="sendMsgCustomer" 
@@ -252,94 +252,20 @@
                     </div>
                 </div>
             </div>
-            <div v-show="true" id="mailContent">
-                <div class="mail-content">
-                    <div class='title test-mail'> Dobrý den vážený zákazníku </div>
-                    <div class='data-row'> Stav vaší objednávky byl změněn na: <b>{{order.state}}</b></div>
-                    <div class='data-row'>Objednávka číslo: {{order.id}} </div>
-                    <div class='data-row' >{{mailToCustomerDesc}}</div>
-                    <div class='data-row'> Rekapitulace objednávky: </div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Název</th>
-                                <th>Počet</th>
-                                <th>Cena (mj)</th>
-                                <th>Cena</th>
-                            </tr>
-                        </thead>
-                        <tbody v-for="(item, index) in order.data.products">
-                            <tr>
-                                <td>{{index + 1}}</td>
-                                <td>{{item.title}}</td>
-                                <td>{{item.count}}</td>
-                                <td>{{item.price}} {{config.priceUnit}}</td>
-                                <td>{{item.price * item.count}} {{config.priceUnit}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class='data-row'> Doprava:  {{shippingOptions.find(itm => itm.id == order.shipping)?.title}} - {{order.shippingPrice}} {{config.priceUnit}}</div>
-                    <div class='data-row'> Platba: {{paymentOptions.find(itm => itm.id == order.payment)?.title}} -  {{order.paymentPrice}} {{config.priceUnit}}</div>
-                    <div class='data-row'><b>Celková cena: {{order.totalPrice}} {{config.priceUnit}}</b></div>
-                    <div class="mail-contact">
-                        <div class='data-row' ><b>{{ bllingAddressSame ? 'Doručovací údaje' : 'Doručovací a fakturační údaje'}}</b></div>
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <td>Zákazník</td>
-                                    <td>{{order.data.contact.firstname}} {{order.data.contact.lastname}}</td>
-                                </tr>
-                                <tr>
-                                    <td>Email</td>
-                                    <td>{{order.data.contact.email}}</td>
-                                </tr>
-                                <tr>
-                                    <td>Telefon</td>
-                                    <td>{{order.data.contact.phone}}</td>
-                                </tr>
-                                <tr v-if="order.data.contact.company">
-                                    <td>Firma</td>
-                                    <td>{{order.data.contact.company}}</td>
-                                </tr>
-                                <tr>
-                                    <td>Adresa</td>
-                                    <td>{{order.data.contact.city}} {{order.data.contact.zip}} {{order.data.contact.street}} {{order.data.contact.houseNumber}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div v-if="!bllingAddressSame" class="mail-contact">
-                        <div class='data-row'><b>{{'Fakturační údaje'}}</b></div>
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <td>Zákazník</td>
-                                    <td>{{billingContact.firstname}} {{billingContact.lastname}}</td>
-                                </tr>
-                                <tr v-if="billingContact.company">
-                                    <td>Firma</td>
-                                    <td>{{billingContact.company}}</td>
-                                </tr>
-                                <tr>
-                                    <td>Adresa</td>
-                                    <td>{{billingContact.city}} {{billingContact.zip}} {{billingContact.street}} {{billingContact.houseNumber}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class='data-row'> S přáním hezkého dne </div>
-                    <div class='data-row'> Tým LKkosmetika.cz</div>
-                </div>
-            </div>
+            <mail-template 
+                v-show="false" 
+                :order="order" 
+                :config="config" 
+                :mailToCustomerDesc="mailToCustomerDesc"
+                :type="'state_change'"
+                :newState="newState"
+                id="mailContent">
+            </mail-template>
         </div>
     </div>
 </template>
 
 <script>
-
-import ShippingOptions from '/models/shippingOptions.ts';
-import PaymentOptions from '/models/paymentOptions.ts';
 import OrderStates from '/models/OrderStates.ts';
 import Editor from '@tinymce/tinymce-vue'
 
@@ -354,8 +280,6 @@ import Editor from '@tinymce/tinymce-vue'
             mailToCustomerInvoice: false,
             config: null,
             order: null,
-            shippingOptions: ShippingOptions,
-            paymentOptions: PaymentOptions,
             orderStates: OrderStates,
             mailHtml: '',
         }
@@ -364,6 +288,8 @@ import Editor from '@tinymce/tinymce-vue'
           'editor': Editor
         },
     computed: {
+        shippingOptions() { return this.config?.shippingOptions},
+        paymentOptions() { return this.config?.paymentOptions},
         shipping: {
             get() { return this.order.shipping},
             set(newVal) { const obj = this.shippingOptions.find(itm => itm.id == newVal); this.order.shipping = obj.id; this.order.shippingPrice = obj.price }
@@ -408,15 +334,19 @@ import Editor from '@tinymce/tinymce-vue'
             this.order.totalPrice = this.totalPrice;
 
             try {
-                const obj2send = this.order;
-                const response = await $fetch(this.$config.bUrl + 'putOrder.php', {
-                    method: 'POST',
-                    body: { order: obj2send }
-                });
-
-                if(response == 'true') {
-                    return true;
+                const response = await fetch(this.$config.bUrl + 'putOrder.php', { method: 'PUT', body: JSON.stringify({order: this.order, token: useAuth().value?.token}) })
+                response.refresh(); // cache baypass
+                const errorStatus = response.status;
+                if (errorStatus == 401) {
+                  alert('Nejsi prihlasen nebo tvé přihlášení expirovalo.')
+                  window.location.reload();
+                  return;
                 }
+                if (errorStatus == 403 || errorStatus == 404) {
+                  alert('Došlo k nějaké chybě na serveru')
+                  return;
+                }
+                return true;
             } catch (exception) {
                 alert('Uložení neproběhlo - došlo k nějaké chybě!');
                 throw exception;
@@ -426,6 +356,7 @@ import Editor from '@tinymce/tinymce-vue'
         },
         async btClickSave() {
             const result = await this.save();
+
             if (result) {
                 window.alert('Úspěšně uloženo!');
             }
@@ -433,7 +364,7 @@ import Editor from '@tinymce/tinymce-vue'
         async btClickSaveAndClose() {
             const result = await this.save();
             if (result) {
-                indow.history.back();
+                window.history.back();
             }
         },
         btClickGoBack() {
@@ -457,13 +388,18 @@ import Editor from '@tinymce/tinymce-vue'
             obj2send.mailHtml = document.getElementById('mailContent').innerHTML;
 
             try {
-                let response = await $fetch(this.$config.bUrl + 'putOrderState.php', {
-                    method: 'POST',
-                    body: { order: obj2send }
-                });
-                const result = JSON.parse(response);
-                console.log(result);
-                if (result.mailSent == true) {
+                const response = await fetch(this.$config.bUrl + 'putOrderState.php', { method: 'PUT', body: JSON.stringify({order: obj2send, token: useAuth().value?.token}) })
+                const errorStatus = response.status;
+                if (errorStatus == 401) {
+                  alert('Nejsi prihlasen nebo tvé přihlášení expirovalo.')
+                  window.location.reload();
+                  return;
+                }
+                if (errorStatus == 403 || errorStatus == 404) {
+                  alert('Došlo k nějaké chybě na serveru')
+                  return;
+                }
+                if (/*result.mailSent ==*/ true) {
                     alert('Email byl úspěšně odeslán.')
                     this.stateDialog = false
                     await this.fetchOrderData()
@@ -472,7 +408,6 @@ import Editor from '@tinymce/tinymce-vue'
                     this.mailToCustomerInvoice = false
                 }
             } catch (exception) {
-                console.log(exception);
                 alert('Došlo k nějaké chybě');
             }
         },
@@ -480,7 +415,6 @@ import Editor from '@tinymce/tinymce-vue'
             const route = useRoute();
             const orderId = route.params.order_id;
             var resposne = await $fetch(this.$config.bUrl + 'getOrderByID.php?id=' + orderId);
-            console.log(JSON.parse(resposne))
             this.order = JSON.parse(resposne);
         },
     },
@@ -491,14 +425,6 @@ import Editor from '@tinymce/tinymce-vue'
             alert('Došlo k nějaké chybě');
             throw exception;
         }
-
-        // styly pro mail
-        const link = document.createElement( "link" );
-            link.href = this.$config.mailCss;
-            link.type = "text/css";
-            link.rel = "stylesheet";
-            link.media = "screen,print";
-        document.getElementsByTagName("head")[0].appendChild(link);
 
         await this.fetchOrderData();
     }

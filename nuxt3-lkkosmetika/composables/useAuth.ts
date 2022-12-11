@@ -101,6 +101,10 @@ export default function () {
         this.expirationLength = payload.expLength;
       }
 
+      public getToken() {
+        return this.token;
+      }
+
     }
 
     const auth = new Auth();

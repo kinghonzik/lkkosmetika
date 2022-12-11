@@ -1,6 +1,9 @@
 <?php
 
 require_once 'DB.php';
+require_once 'global.php';
+require_once 'model-get.php';
+require_once 'JWT/jwt-lib.php';
 
 function GetConfig()
 {
@@ -35,6 +38,23 @@ function GetBase($dbConn, $tableName) {
   return $records;
 }
 
+function GetErrors()
+{
+  try {
+    $dbConn = DB::Get();
+    $query = $dbConn->prepare("SELECT * FROM `errors` ORDER BY datetime DESC LIMIT 1000");
+    $success = $query->execute();
+    $records = $query->fetchAll(PDO::FETCH_OBJ);
+
+    http_response_code(200);
+    echo json_encode($records);
+  } catch(Exception $e) {
+    InsertError($e, 'WEBAPI-' . __FUNCTION__);
+    http_response_code(403);
+    echo json_encode(false);
+  }
+}
+
 function GetProducts()
 {
   try {
@@ -43,8 +63,9 @@ function GetProducts()
     http_response_code(200);
     echo json_encode($products);
   } catch(Exception $e) {
+    InsertError($e, 'WEBAPI-' . __FUNCTION__);
     http_response_code(403);
-    echo json_encode($e);
+    echo json_encode(false);
   }
 }
 
@@ -61,8 +82,9 @@ function GetProductByID()
     http_response_code(200);
     echo json_encode($product);
   } catch(Exception $e) {
+    InsertError($e, 'WEBAPI-' . __FUNCTION__);
     http_response_code(403);
-    echo json_encode($e);
+    echo json_encode(false);
   }
 }
 
@@ -122,18 +144,18 @@ function GetOrders()
     http_response_code(200);
     echo json_encode($response);
   } catch(Exception $e) {
+    InsertError($e, 'WEBAPI-' . __FUNCTION__);
     http_response_code(403);
-    echo json_encode($e);
+    echo json_encode(false);
   }
 }
 
-function GetOrderByID()
+function GetOrderByID($id)
 {
   try {
-    $id = (int)$_GET['id'];
     $dbConn = DB::Get();
     $query = $dbConn->prepare("SELECT * FROM `order` where id = ?");
-    $query->execute(array($id));
+    $query->execute(array((int)$id));
     $item = $query->fetch(PDO::FETCH_OBJ);
     $item->data = json_decode($item->data);
     $item->sentEmails = json_decode($item->sentEmails);
@@ -141,8 +163,9 @@ function GetOrderByID()
     http_response_code(200);
     echo json_encode($item);
   } catch(Exception $e) {
+    InsertError($e, 'WEBAPI-' . __FUNCTION__);
     http_response_code(403);
-    echo json_encode($e);
+    echo json_encode(false);
   }
 }
 

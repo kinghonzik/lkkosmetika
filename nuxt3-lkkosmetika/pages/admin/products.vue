@@ -54,13 +54,13 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item of products2View" class="product" :id="item.data.id" style="cursor: pointer" title="Kliknutím přejdete do editace" @click.self="btClickEditProduct(item)">
-          <td>
+        <tr v-for="item of products2View" class="product" :id="item.data.id" style="cursor: pointer">
+          <td @click="btClickEditProduct(item)" title="Kliknutím přejdete do editace">
             <div>
               <img :src="item.data.image ? '/img/products/' + item.data.image.src : '#'"/>
             </div>
           </td>
-          <td>
+          <td @click="btClickEditProduct(item)" title="Kliknutím přejdete do editace">
             <div>{{item.data.title}} </div>
             <div v-if="item.data.manufacturer" style="font-size: 85%; font-style: italic; font-weight: 400;"> {{item.data.manufacturer}}</div>
             <div v-if="item.data.variants?.length" style="font-size: 75%; font-style: italic; font-weight: bolder; padding: 10px 0 0 0"> {{item.data.variants.length}} varianty</div>
@@ -102,7 +102,7 @@
   export default defineComponent({
       data() {
           return {
-            orderBy: 'id asc',
+            orderBy: 'id desc',
             filterPublished: '*',
             filterAvailability: '*',
             filterManufacturer: '*',
@@ -148,16 +148,25 @@
           navigateTo('/admin/product/' + product.data.id)
         },
         async btClickDelete(product) {
+          console.log(product);
+          console.log(this.$config.bUrl + 'delProduct.php');
           if (!window.confirm('Opravdu si přejete smazat produkt? Bude navždy pryč.'))
             return;
           try {
-            const response = await $fetch(this.$config.bUrl + 'delProduct.php', {method: 'DELETE',body: JSON.stringify(product)});
-            if (response == 'true') {
-              await this.reloadProducts();
-              alert('Produkt byl smazán.')
-            } else {
-              alert('Smazání se nezdařilo. ' + response)
+            const obj2send = JSON.stringify({product: product, token: useAuth().value?.token});
+            const response = await fetch(this.$config.bUrl + 'delProduct.php', { method: 'DELETE', body: obj2send })
+            const errorStatus = response.status;
+            if (errorStatus == 401) {
+              alert('Nejsi prihlasen nebo tvé přihlášení expirovalo.')
+              window.location.reload();
+              return;
             }
+            if (errorStatus == 403 || errorStatus == 404) {
+              alert('Došlo k nějaké chybě na serveru')
+              return;
+            }
+            await this.reloadProducts();
+            alert('Produkt byl smazán.')
           } catch(exception) {
               alert('Došlo k nějaké chybě');
               throw exception;
@@ -242,8 +251,12 @@
             const data = await $fetch(this.$config.bUrl + 'getProducts.php');
             const dataParsered = JSON.parse(data);
             this.productsList = dataParsered;
-            this.products2View = [...this.productsList];
+            this.products2View = this.productsList;
             this.applyProductsOrdering();
+            this.filterPublishing();
+            this.filterAvailabilityMethod();
+            this.filterManufacturerMethod();
+
           } catch(exception) {
               alert('Došlo k nějaké chybě');
               throw exception;
@@ -276,10 +289,6 @@
             throw exception;
         }
         await this.reloadProducts();
-        this.applyProductsOrdering();
-        this.filterPublishing();
-        this.filterAvailabilityMethod();
-        this.filterManufacturerMethod();
         this.ready = true;
       }
   })

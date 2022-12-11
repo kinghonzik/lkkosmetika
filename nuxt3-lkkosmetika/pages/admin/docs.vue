@@ -65,13 +65,19 @@ import Editor from '@tinymce/tinymce-vue'
       methods: {
         async btClickSave() {
             try {
-                var response = await $fetch(this.$config.bUrl + 'putDocs.php', { method: 'PUT', body: { conditions: this.conditions, GDPR: this.GDPR }}) 
-                if ('' + response == 'true') {
-                    alert('Uložení proběhlo v pořádku!')
-                } else{
-                    alert('Něco se nepovedlo: ' + response);
-                    throw response;
+                const obj2send = JSON.stringify({ conditions: this.conditions, GDPR: this.GDPR, token: useAuth().value?.token });
+                const response = await fetch(this.$config.bUrl + 'putDocs.php', { method: 'PUT', body: obj2send })
+                const errorStatus = response.status;
+                if (errorStatus == 401) {
+                  alert('Nejsi prihlasen nebo tvé přihlášení expirovalo.')
+                  window.location.reload();
+                  return;
                 }
+                if (errorStatus == 403 || errorStatus == 404) {
+                  alert('Došlo k nějaké chybě na serveru')
+                  return;
+                }
+                alert('Úspěšně uloženo.')
             } catch(exception) {
                 alert('Došlo k nějaké chybě');
                 throw exception;

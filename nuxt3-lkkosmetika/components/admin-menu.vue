@@ -20,6 +20,9 @@
                         <a class="nav-link" href="/admin/docs">Dokumenty</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="/admin/errorlog">ErrorLog</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="/">Přejít na web</a>
                     </li>
                     <li class="nav-item">

@@ -1,3 +1,38 @@
-.test-mail {
-    color: red;
+
+.data-row {
+    padding: 5px 10px;
+}
+
+.mail-content .table-products td,
+.mail-content .table-products th {
+    padding: 5px 10px;
+    border-bottom: 1px solid lightgray;
+}
+
+.mail-content .mail-contact .table-contact td {
+    padding: 3px 10px;
+}
+
+.mail-content .mail-contact {
+    padding: 10px;
+}
+
+.mail-content .footer {
+    padding-top: 10px;
+    font-size: 110%;
+    font-style: italic;
+}
+
+.mail-content .footer .data-row {
+    padding: 10px 10px;
+}
+
+.mail-content .title {
+    padding: 15px 10px;
+    font-size: 120%;
+    font-weight: 500;
+}
+
+.mail-content .recap-section {
+    padding-top: 10px;
 }

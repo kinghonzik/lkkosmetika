@@ -1,16 +1,29 @@
 <?php
 
+require_once 'global.php';
 require_once 'DB.php';
 require_once 'file-functions.php';
+require_once 'model-get.php';
+require_once 'model-insert.php';
+require_once 'mail.php';
+require_once 'JWT/jwt-lib.php';
 
 function UpdateProduct() 
 {
   try {
     $dbConn = DB::Get();
-    $product = json_decode(file_get_contents("php://input"));
+    $input = json_decode(file_get_contents("php://input"));
+    $product = $input->product;
+    $token = $input->token;
+    if (!is_jwt_valid($token, Config::$authSecret)) {
+      throw new AuthException();
+    }
     if ($product->data->image->status == 'update') {
       updateImage($product->data->image);
     }
+    if (!isSet($product->data->additionalImages))
+      $product->data->additionalImages = array();
+
     foreach ($product->data->additionalImages as $item) {
       if (isSet($item->status) && $item->status == 'update')
         updateImage($item);
@@ -24,10 +37,15 @@ function UpdateProduct()
     http_response_code(200);
     echo json_encode(true);
 
-  } catch(Exception $e) {
-    $dbConn->rollback();
+  }
+  catch(AuthException $ae) {
+    http_response_code(401);
+    echo json_encode('Unauthorized');
+  }  
+  catch(Exception $e) {
+    InsertError($e, 'WEBAPI-' . __FUNCTION__);
     http_response_code(403);
-    echo json_encode($e);
+    echo json_encode(false);
   }
 }
 
@@ -62,12 +80,17 @@ function getOrderRecap($order) {
   return $str;
 }
 
+
 function UpdateOrderState() 
 {
   try {
     $dbConn = DB::Get();
     $input = json_decode(file_get_contents("php://input"));
     $order = $input->order;
+    $token = $input->token;
+    if (!is_jwt_valid($token, Config::$authSecret)) {
+      throw new AuthException();
+    }
 
     $id = (int)$order->id;
     $data = $order->data;
@@ -77,47 +100,29 @@ function UpdateOrderState()
     $mailToCustomerInvoice = $order->mailToCustomerInvoice;
     $mailHtml = $order->mailHtml;
     $sentEmails = $order->sentEmails;
+    $config = GetConfig();
 
     $response = new stdClass;
 
     if ($mailToCustomer) {
-      // TODO: poslani mailu
       $to = $data->contact->email;
-      $subject = "LK kosmetika - Změna stavu objednávky";
-      
-      $message = "<html>
-                  <head>
-                  <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
-                  <style> 
-                    .title { padding: 5px; } 
-                    .data-row { padding: 5px; } 
-                    .mail-content td, .mail-content th { padding: 5px; }
-                    .mail-contact { padding-top: 10px; } 
-                    .footer { padding: 5px;}</style>
-                  </head>
-                  <body>";
-      $message .= "\r\n";
-      $message .= $mailHtml;
-      $message .="</body></html>";
-      
-      $header = 'MIME-Version: 1.0' . "\r\n";
-      $header .= 'Content-Type: text/html; charset=UTF-8' . "\r\n";
-      $header .= "From:info@lkkosmetika.cz \r\n";
+      $from = $config->mailFrom;
+      $subject = "Změna stavu objednávky";
+      $retval = sendMail($to,$from,$subject,$mailHtml);
 
-      $retval = mail($to,$subject,$message,$header);
-      
-      if($retval == true ) {
+      if ($retval == true ) {
           $response->mailSent = true;
           $mailInfo = new stdClass;
           $mailInfo->email = $data->contact->email;
           $mailInfo->state = $state;
+          $mailInfo->success = $retval;
           $mailInfo->datetime = date("c");
           $mailInfo->desc = $mailToCustomerDesc;
           $mailInfo->invoice = $mailToCustomerInvoice;
           if (!$sentEmails || empty($sentEmails))
             $sentEmails = [];
           array_push($sentEmails, $mailInfo);
-      }else {
+      } else {
          $response->mailSent = false;
          $response->mailSentError = 'Z nějakého důvodu se nezdařilo odeslat mail.';
       }
@@ -137,9 +142,15 @@ function UpdateOrderState()
     $response->status = 'OK';
     echo json_encode($response);
 
-  } catch(Exception $e) {
+  }   
+  catch(AuthException $ae) {
+    http_response_code(401);
+    echo json_encode('Unauthorized');
+  }
+  catch(Exception $e) {
+    InsertError($e, 'WEBAPI-' . __FUNCTION__);
     http_response_code(403);
-    echo json_encode($e);
+    echo json_encode(false);
   }
 }
 
@@ -149,6 +160,10 @@ function UpdateOrder()
     $dbConn = DB::Get();
     $input = json_decode(file_get_contents("php://input"));
     $order = $input->order;
+    $token = $input->token;
+    if (!is_jwt_valid($token, Config::$authSecret)) {
+      throw new AuthException();
+    }
 
     $id = (int)$order->id;
     $data = $order->data;
@@ -165,10 +180,15 @@ function UpdateOrder()
     http_response_code(200);
     echo json_encode(true);
 
-  } catch(Exception $e) {
-    $dbConn->rollback();
+  }
+  catch(AuthException $ae) {
+    http_response_code(401);
+    echo json_encode('Unauthorized');
+  } 
+  catch(Exception $e) {
+    InsertError($e, 'WEBAPI-' . __FUNCTION__);
     http_response_code(403);
-    echo json_encode($e);
+    echo json_encode(false);
   }
 }
 
@@ -176,20 +196,26 @@ function UpdateConfig()
 {
   try {
     $dbConn = DB::Get();
-    $dbConn->beginTransaction();
-    $data = file_get_contents("php://input");
-    $decodedData = json_decode($data);
+    $input = json_decode(file_get_contents("php://input"));
+    $data = $input->config;
+    $token = $input->token;
+    if (!is_jwt_valid($token, Config::$authSecret)) {
+      throw new AuthException();
+    }
     $dbConn->prepare("DELETE FROM `config`")->execute();
-    $dbConn->prepare("INSERT INTO `config` VALUES(?)")->execute(array($data));
-
-    $dbConn->commit();
+    $dbConn->prepare("INSERT INTO `config` VALUES(?)")->execute(array(json_encode($data)));
     http_response_code(200);
     echo json_encode(true);
 
-  } catch(Exception $e) {
-    $dbConn->rollback();
+  }
+  catch(AuthException $ae) {
+    http_response_code(401);
+    echo json_encode('Unauthorized');
+  } 
+  catch(Exception $e) {
+    InsertError($e, 'WEBAPI-' . __FUNCTION__);
     http_response_code(403);
-    echo json_encode($e);
+    echo json_encode(false);
   }
 }
 
@@ -198,20 +224,24 @@ function UpdateDocs()
 {
   try {
     $dbConn = DB::Get();
-    $dbConn->beginTransaction();
-    $data = file_get_contents("php://input");
-    $decodedData = json_decode($data);
+    $input = json_decode(file_get_contents("php://input"));
+    $token = $input->token;
+    if (!is_jwt_valid($token, Config::$authSecret)) {
+      throw new AuthException();
+    }
     $dbConn->prepare("DELETE FROM `docs`")->execute();
-    $dbConn->prepare("INSERT INTO `docs` VALUES(?,?)")->execute(array($decodedData->conditions, $decodedData->GDPR));
-
-    $dbConn->commit();
+    $dbConn->prepare("INSERT INTO `docs` VALUES(?,?)")->execute(array($input->conditions, $input->GDPR));
     http_response_code(200);
     echo json_encode(true);
-
-  } catch(Exception $e) {
-    $dbConn->rollback();
+  }
+  catch(AuthException $ae) {
+    http_response_code(401);
+    echo json_encode('Unauthorized');
+  } 
+  catch(Exception $e) {
+    InsertError($e, 'WEBAPI-' . __FUNCTION__);
     http_response_code(403);
-    echo json_encode($e);
+    echo json_encode(false);
   }
 }
 

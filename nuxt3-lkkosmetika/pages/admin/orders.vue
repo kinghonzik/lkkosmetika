@@ -50,7 +50,7 @@
                         <td>{{item.id}}</td>
                         <td>{{new Date(item.created).toLocaleString()}}</td>
                         <td :style="{'background': getStateColor(item.state), 'text-align': 'center'}"><span style="font-weight: 500; color: white">{{item.state}}</span></td>
-                        <td>{{item.data?.contact?.lastname}} {{item.data?.contact?.firstname}}</td>
+                        <td>{{item.data?.contact?.firstname}} {{item.data?.contact?.lastname}}</td>
                         <td>{{item.data?.contact?.email}}</td>
                         <td>{{item.totalPrice}}</td>
                         <td>{{shippingOptions.find(itm => itm.id == item.shipping)?.title}}</td>
@@ -73,8 +73,6 @@
 </template>
 
 <script>
-import ShippingOptions from '/models/shippingOptions.ts';
-import PaymentOptions from '/models/paymentOptions.ts';
 import OrderStates from '/models/OrderStates.ts';
   export default {
     middleware: 'auth',
@@ -89,12 +87,12 @@ import OrderStates from '/models/OrderStates.ts';
             offset: 0,
             totalCount: 0,
             orderList: null,
-            orderStates: OrderStates,
-            shippingOptions: ShippingOptions,
-            paymentOptions: PaymentOptions,
+            orderStates: OrderStates
         }
     },
     computed: {
+        shippingOptions() { return this.config?.shippingOptions},
+        paymentOptions() { return this.config?.paymentOptions},
         page() { return parseInt(this.offset / this.limit) + 1},
         maxPage() { return parseInt(this.totalCount / this.limit) + 1}
     },

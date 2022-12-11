@@ -56,6 +56,62 @@
             </table>
           </div>
         </div>
+        <div v-if="config" id="section-shipping" class="section col-sm-12">
+          <div class="title">doprava</div>
+          <div class="content">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th style="width: 1%">#</th>
+                  <th>Název</th>
+                  <th style="width: 1%"></th>
+                  <th style="width: 1%; min-width: 150px;"> Cena</th>
+                  <th>Popisek</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="item of config.shippingOptions">
+                  <td style="white-space: nowrap" >{{item.id}}</td>
+                  <td><input class="form-control" type="text" v-model="item.title"/></td>
+                  <td>
+                    <button v-if="item.allowed" class="btn btn-success btn-sm" @click="item.allowed = !item.allowed"> Povoleno </button>
+                    <button v-else class="btn btn-danger btn-sm" @click="item.allowed = !item.allowed"> Zakázáno </button>
+                  </td>
+                  <td><input class="form-control" type="number" min="0" v-model="item.price"/></td>
+                  <td><input class="form-control" type="text" v-model="item.hint"/></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div v-if="config" id="section-payment" class="section col-sm-12">
+          <div class="title">platba</div>
+          <div class="content">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th style="width: 1%">#</th>
+                  <th>Název</th>
+                  <th style="width: 1%"></th>
+                  <th style="width: 1%; min-width: 150px;"> Cena</th>
+                  <th>Popisek</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="item of config.paymentOptions">
+                  <td style="white-space: nowrap" >{{item.id}}</td>
+                  <td><input class="form-control" type="text" v-model="item.title"/></td>
+                  <td>
+                    <button v-if="item.allowed" class="btn btn-success btn-sm" @click="item.allowed = !item.allowed"> Povoleno </button>
+                    <button v-else class="btn btn-danger btn-sm" @click="item.allowed = !item.allowed"> Zakázáno </button>
+                  </td>
+                  <td><input class="form-control" type="number" min="0" v-model="item.price"/></td>
+                  <td><input class="form-control" type="text" v-model="item.hint"/></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
         <div v-if="config" class="coltrol-panel">
           <button @click="btClickUlozit()" class="btn btn-success"> Uložit konfiguraci </button>
         </div>
@@ -64,6 +120,10 @@
 </template>
 
 <script>
+
+import DefShippingOptions from '/models/defShippingOptions.ts';
+import DefPaymentOptions from '/models/defPaymentOptions.ts';
+
     export default defineComponent({
       data() {
         return {
@@ -86,10 +146,19 @@
       methods: {
         async configSaveAndReload() {
           try {
-            const response = await $fetch(this.$config.bUrl + 'postConfig.php', { method: 'POST', body: this.config });
-            console.log(response)
-            if ('' +  response == 'true')
-              alert('Uloženo v pořádku.')
+            const obj2send = JSON.stringify({ config: this.config, token: useAuth().value?.token });
+            const response = await fetch(this.$config.bUrl + 'postConfig.php', { method: 'POST', body: obj2send })
+            const errorStatus = response.status;
+            if (errorStatus == 401) {
+              alert('Nejsi prihlasen nebo tvé přihlášení expirovalo.')
+              window.location.reload();
+              return;
+            }
+            if (errorStatus == 403 || errorStatus == 404) {
+              alert('Došlo k nějaké chybě na serveru')
+              return;
+            }
+            alert('Uloženo v pořádku.')
           } catch(exception) {
               alert('Došlo k nějaké chybě při ukládání configu!');
               throw exception;
@@ -102,6 +171,10 @@
         async fetchConfig() {
           try {
             this.config = JSON.parse(await $fetch(this.$config.bUrl + 'getConfig.php'));
+            if (!this.config.shippingOptions) 
+              this.config.shippingOptions = DefShippingOptions;
+            if (!this.config.paymentOptions) 
+              this.config.paymentOptions = DefPaymentOptions;
           } catch(exception) {
               alert('Došlo k nějaké chybě při načítání configu!');
               throw exception;

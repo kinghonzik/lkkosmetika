@@ -267,6 +267,7 @@ import Editor from '@tinymce/tinymce-vue'
               categoriesChecked: [],
               utils: null,
               productsList: [],
+              authToken: '',
             }
         },
         components: {
@@ -316,16 +317,20 @@ import Editor from '@tinymce/tinymce-vue'
             }
             if (this.formType == 'edit') {
               try {
-                console.log(this.product)
-                const obj2send = JSON.stringify(this.product);
-                var response = await $fetch(this.$config.bUrl + 'putProduct.php', { method: 'PUT', body: obj2send }) 
-                console.log(response);
-                if ('' + response == 'true') {
-                  window.history.back();
-                } else {
-                  alert('Něco se nepovedlo: ' + response);
-                  throw response;
+                const obj2send = JSON.stringify({product: this.product, token: this.authToken});
+                const response = await fetch(this.$config.bUrl + 'putProduct.php', { method: 'PUT', body: obj2send })
+                const errorStatus = response.status;
+                if (errorStatus == 401) {
+                  alert('Nejsi prihlasen nebo tvé přihlášení expirovalo.')
+                  window.location.reload();
+                  return;
                 }
+                if (errorStatus == 403 || errorStatus == 404) {
+                  alert('Došlo k nějaké chybě na serveru')
+                  return;
+                }
+                // success
+                window.history.back();
               } catch(exception) {
                   alert('Došlo k nějaké chybě');
                   throw exception;
@@ -333,18 +338,23 @@ import Editor from '@tinymce/tinymce-vue'
             }
             if (this.formType == 'new') {
               try {
-                console.log(this.product)
-                const obj2send = JSON.stringify(this.product);
-                var response = await $fetch(this.$config.bUrl + 'postProduct.php', { method: 'POST', body: obj2send }) 
-                if ('' + response == 'true') {
-                  window.history.back();
-                } else {
-                  alert('Něco se nepovedlo: ' + response);
-                  throw response;
+                const obj2send = JSON.stringify({product: this.product, token: this.authToken});
+                const response = await fetch(this.$config.bUrl + 'postProduct.php', { method: 'POST', body: obj2send })
+                const errorStatus = response.status;
+                if (errorStatus == 401) {
+                  alert('Nejsi prihlasen nebo tvé přihlášení expirovalo.')
+                  window.location.reload();
+                  return;
                 }
+                if (errorStatus == 403 || errorStatus == 404) {
+                  alert('Došlo k nějaké chybě na serveru')
+                  return;
+                }
+                // success
+                window.history.back();
               } catch(exception) {
-                  alert('Došlo k nějaké chybě');
-                  throw exception;
+                alert('Došlo k nějaké chybě');
+                throw exception;
               }
             }
           },
@@ -398,7 +408,6 @@ import Editor from '@tinymce/tinymce-vue'
               this.product.data.additionalImages[arrIndex].status = 'update';
               this.product.data.additionalImages[arrIndex].savedOnServer = false;
             }
-            console.log(this.product)
           }
         },
         async mounted() {
@@ -417,6 +426,7 @@ import Editor from '@tinymce/tinymce-vue'
                 throw exception;
             }
 
+            this.authToken = useAuth().value?.token;
             this.utils = useUtils();
             const route = useRoute();
             const productName = route.params.product_name;
@@ -436,9 +446,6 @@ import Editor from '@tinymce/tinymce-vue'
                     throw error;
                 }
             }
-
-            console.log(this.product)
-            console.log(new Product);
             
             // usages
             const usages = [];
