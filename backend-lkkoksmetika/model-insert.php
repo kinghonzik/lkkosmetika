@@ -7,6 +7,7 @@ require_once 'model-get.php';
 require_once 'file-functions.php';
 require_once 'mail.php';
 require_once 'JWT/jwt-lib.php';
+require_once 'CRSF.php';
 
   function InsertProduct() 
   {
@@ -71,16 +72,27 @@ require_once 'JWT/jwt-lib.php';
   }
 
   class ValidationException extends Exception {}
+  class CRSFException extends Exception {}
 
   function InsertOrder() 
   {
     try {
+
+      if (checkCRSF)
+
       $dbConn = DB::Get();
       //$dbConn->beginTransaction();
       $input = json_decode(file_get_contents("php://input"));
       $config = GetConfig();
-      $order = $input;
-      $data = $order->data;
+      $order = $input->order;
+      $token = $input->token;
+
+      // validace CRSF tokenu
+      $CRSFvalidation = checkCRSF($token);
+      if ($CRSFvalidation != 'ok') {
+        throw new CRSFException($CRSFvalidation);
+      }
+      deleteToken($token); // smazani tokenu z formulare
 
       // validace formulare
       $data = new stdClass;
@@ -267,7 +279,12 @@ require_once 'JWT/jwt-lib.php';
       
       http_response_code(200);
       echo json_encode($response);
-    } catch(ValidationException $e) {
+    }
+    catch(CRSFException $e) {
+      http_response_code(403);
+      echo json_encode('token-'.$e->getMessage());
+    }
+    catch(ValidationException $e) {
       InsertError($e->getMessage(), 'WEBAPI-FormValidation-' . __FUNCTION__);
       http_response_code(403);
       echo json_encode(false);

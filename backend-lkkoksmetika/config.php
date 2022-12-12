@@ -11,6 +11,7 @@ class Config
    public static $authSecret = "2022lk*@#(&)kosmetika^^^tralalala@!juhuuuuu85žral0k";
    public static $authExpirationSeconds = 60 * 60;
    public static $jwtHeader = array('alg'=>'HS256','typ'=>'JWT');
+   public static $CRSFExpirationSec = 60 * 30;
 }
 
 class ConfigOrderDb

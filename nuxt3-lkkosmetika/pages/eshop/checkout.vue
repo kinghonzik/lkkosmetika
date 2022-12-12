@@ -342,6 +342,7 @@ export default {
             documentReady: false,
             showErrors: false,
             cookie: null,
+            token: '',
             contact: {
                 firstname: '',
                 lastname: '',
@@ -439,7 +440,7 @@ export default {
             obj2send.mailHtml = document.getElementById('mailContent').innerHTML;
 
             try {
-                const response = await $fetch(this.$config.bUrl + 'postOrder.php', { method: 'POST', body: JSON.stringify(obj2send)});
+                const response = await fetch(this.$config.bUrl + 'postOrder.php', { method: 'POST', body: JSON.stringify({order: obj2send, token: this.token})});
                 console.log(response);
                 const result = JSON.parse(response);
                 if (result.status == 'OK') {
@@ -507,15 +508,12 @@ export default {
     }, 
     async mounted() {
         try {
+            this.token = await $fetch(this.$config.bUrl + 'getCRSF.php');
+            console.log(this.token);
             this.config = JSON.parse(await $fetch(this.$config.bUrl + 'getConfig.php'));
-        } catch(exception) {
-            alert('Došlo k nějaké chybě');
-            throw exception;
-        }
-        try {
-          const data = await $fetch(this.$config.bUrl + 'getProducts.php');
-          const dataParsered = JSON.parse(data);
-          this.productsList = dataParsered;
+            const data = await $fetch(this.$config.bUrl + 'getProducts.php');
+            const dataParsered = JSON.parse(data);
+            this.productsList = dataParsered;
         } catch(exception) {
             alert('Došlo k nějaké chybě');
             throw exception;

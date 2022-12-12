@@ -3,6 +3,7 @@
 require_once 'DB.php';
 require_once 'global.php';
 require_once 'model-get.php';
+require_once 'model-insert.php';
 require_once 'JWT/jwt-lib.php';
 
 function GetConfig()
