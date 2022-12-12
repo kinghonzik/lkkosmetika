@@ -1,6 +1,7 @@
 <template>
   <div>
     <html-header :params="headerParams"></html-header>
+    <eshop-info-msg :config="config"></eshop-info-msg>
     <cart></cart>
       <div class="hrefbutton" @click="window.history.back()" style="width: fit-content">Zpět na seznam produktů </div>
     

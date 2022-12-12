@@ -1,5 +1,6 @@
 <template>
     <div class="page-content">
+        <eshop-info-msg :config="config"></eshop-info-msg>
         <cart></cart>
         <div v-if="modalFailMsg" class="modal" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered">
@@ -318,7 +319,7 @@
                             <textarea class="form-control" rows="5" maxlength='1000' v-model="customerDescription"></textarea>
                         </div>
                         <div style="font-weight: 500; font-size: 130%; padding: 5px 0 20px 0;"> Celkem zaplatíte: {{totalPrice}} {{config.priceUnit}}</div>
-                        <button class="btn btn-success" @click="btClickTrySend()" type="submit">Odeslat objednávku</button>
+                        <button :disabled="!config.newOrdersAllowed" :title="config.newOrdersAllowed ? '' : 'Objednávání není zatím povoleno.'" class="btn btn-success" @click="btClickTrySend()" type="submit">Odeslat objednávku</button>
                     </div>
                 </div>
             </div>
@@ -441,13 +442,16 @@ export default {
 
             try {
                 const response = await fetch(this.$config.bUrl + 'postOrder.php', { method: 'POST', body: JSON.stringify({order: obj2send, token: this.token})});
-                console.log(response);
-                const result = JSON.parse(response);
-                if (result.status == 'OK') {
+                if (response.status == 200) {
                     this.cookie.clear();
                     this.successSentMsg = 'Objednávka přijata, rekapitulaci objednávky dostanene na zadanou emailovou adresu.';
                 } else {
-                    this.modalFailMsg = 'Došlo k nějaké chybě, zkuste to prosím poději nebo nám prosím napište email. Děkujeme.';
+                    if (response.status == 400) {
+                        this.modalFailMsg = 'Platnost formuláře vypršela. Obnovte stránku (zmáčknutím F5) a odešlete prosím formulář znovu.';
+                    } 
+                    else {
+                        this.modalFailMsg = 'Došlo k nějaké chybě, zkuste to prosím poději nebo nám prosím napište email. Děkujeme.';
+                    }
                 }
             } catch(exception) {
                 this.modalFailMsg = 'Došlo k nějaké chybě';         
@@ -509,7 +513,6 @@ export default {
     async mounted() {
         try {
             this.token = await $fetch(this.$config.bUrl + 'getCRSF.php');
-            console.log(this.token);
             this.config = JSON.parse(await $fetch(this.$config.bUrl + 'getConfig.php'));
             const data = await $fetch(this.$config.bUrl + 'getProducts.php');
             const dataParsered = JSON.parse(data);

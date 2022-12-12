@@ -65,8 +65,13 @@ require_once 'CRSF.php';
   }
 
   function InStr($string, $maxLength = 128) {
-    if($string && strlen($string) > $maxLength)
-      return substr($string, 0, $maxLength - 1);
+    if ($string) {
+      $string = trim($string);
+      $string = stripslashes($string);
+      $string = htmlspecialchars($string);
+      if(strlen($string) > $maxLength)
+        return substr($string, 0, $maxLength - 1);
+    }
     
     return $string;
   }
@@ -78,12 +83,18 @@ require_once 'CRSF.php';
   {
     try {
 
-      if (checkCRSF)
-
       $dbConn = DB::Get();
-      //$dbConn->beginTransaction();
-      $input = json_decode(file_get_contents("php://input"));
       $config = GetConfig();
+
+      if (!$config->newOrdersAllowed) {
+        http_response_code(500);
+        $response = new stdClass;
+        $response->status = 'error';
+        $response->msg = 'orders not allowed';
+        return;
+      }
+
+      $input = json_decode(file_get_contents("php://input"));
       $order = $input->order;
       $token = $input->token;
 
@@ -273,7 +284,7 @@ require_once 'CRSF.php';
 
       // odpoved zpatky klientovi
       $response = new stdClass;
-      $response->status = 'OK';
+      $response->status = 'ok';
       $response->mailToAdmin = $mailToAdmin;
       $response->mailToCustomer = $mailToCustomer;
       
@@ -281,18 +292,27 @@ require_once 'CRSF.php';
       echo json_encode($response);
     }
     catch(CRSFException $e) {
-      http_response_code(403);
-      echo json_encode('token-'.$e->getMessage());
+      http_response_code(400);
+      $response = new stdClass;
+      $response->status = 'error';
+      $response->msg = 'token-'.$e->getMessage();
+      echo json_encode($response);
     }
     catch(ValidationException $e) {
       InsertError($e->getMessage(), 'WEBAPI-FormValidation-' . __FUNCTION__);
       http_response_code(403);
-      echo json_encode(false);
+      $response = new stdClass;
+      $response->status = 'error';
+      $response->msg = 'error';
+      echo json_encode($response);
     }
     catch(Exception $e) {
       InsertError($e, 'WEBAPI-' . __FUNCTION__);
       http_response_code(403);
-      echo json_encode(false);
+      $response = new stdClass;
+      $response->status = 'error';
+      $response->msg = 'error';
+      echo json_encode($response);
     }
   }
 

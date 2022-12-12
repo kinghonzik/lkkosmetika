@@ -4,6 +4,7 @@ require_once 'config.php';
 
 function getCRSF() {
     if(session_id() == '' || !isset($_SESSION) || session_status() === PHP_SESSION_NONE) {
+        session_id( 'mySessionId' );
         session_start();
     };
 
@@ -22,6 +23,7 @@ function getCRSF() {
 
 function checkCRSF($token) {
     if(session_id() == '' || !isset($_SESSION) || session_status() === PHP_SESSION_NONE) {
+        session_id( 'mySessionId' );
         session_start();
     };
 
@@ -53,6 +55,7 @@ function checkCRSF($token) {
 
 function deleteToken($token) {
     if(session_id() == '' || !isset($_SESSION) || session_status() === PHP_SESSION_NONE) {
+        session_id( 'mySessionId' );
         session_start();
     };
 
@@ -74,7 +77,11 @@ $token = getCRSF();
 echo $token->datetime . " - " . $token->token;
 */
 /*
-echo checkCRSF('b5c08ecd240730247c4871731e85388d');
+session_start();
+var_dump($_SESSION);
+echo checkCRSF('f7bbe19361276a0125aa9a7dc1efad64');
+*/
+/*
 echo "<br>";
 echo deleteToken('b5c08ecd240730247c4871731e85388d');
 echo "<br>";

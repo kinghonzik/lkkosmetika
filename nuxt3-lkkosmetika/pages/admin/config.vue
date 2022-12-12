@@ -41,6 +41,19 @@
                   </td>
                 </tr>
                 <tr>
+                  <td> Příjem objednávek</td>
+                  <td>
+                    <button v-if="config.newOrdersAllowed" class="btn btn-success btn-sm" @click="config.newOrdersAllowed = !config.newOrdersAllowed"> Povoleno </button>
+                    <button v-else class="btn btn-danger btn-sm" @click="config.newOrdersAllowed = !config.newOrdersAllowed"> Zakázáno </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td> Informativní zpráva pro zákazníky </td>
+                  <td>
+                    <textarea class="form-control" rows="3" v-model="config.infoMsg"></textarea>
+                  </td>
+                </tr>
+                <tr>
                   <td>FB</td>
                   <td>
                     <input class="form-control" type="text" v-model="config.linkFacebook"/>

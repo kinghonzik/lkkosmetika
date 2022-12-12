@@ -1,6 +1,7 @@
 <template>
     <div>
       <div v-if="config">
+        <eshop-info-msg :config="config"></eshop-info-msg>
         <cart></cart>
         <nav class="navbar navbar-expand-lg navbar-light">
           <ul class="navbar-nav mr-auto" style="display: inline-block">

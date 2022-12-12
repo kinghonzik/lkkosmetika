@@ -296,7 +296,7 @@ import Editor from '@tinymce/tinymce-vue'
         },
         payment: {
             get() { return this.order.payment},
-            set(newVal) { const obj = this.paymentOptions.find(itm => itm.id == newVal); this.order.payment = obj.id; this.order.paymentPrice = obj.price; console.log(this.order)}
+            set(newVal) { const obj = this.paymentOptions.find(itm => itm.id == newVal); this.order.payment = obj.id; this.order.paymentPrice = obj.price; }
         },
         contact() {
             return this.order.data.contact
