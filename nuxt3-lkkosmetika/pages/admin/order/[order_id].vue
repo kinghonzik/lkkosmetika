@@ -400,7 +400,7 @@ import Editor from '@tinymce/tinymce-vue'
                   return;
                 }
                 if (/*result.mailSent ==*/ true) {
-                    alert('Email byl úspěšně odeslán.')
+                    alert('Vše proběhlo v pořádku.')
                     this.stateDialog = false
                     await this.fetchOrderData()
                     this.mailToCustomer = false

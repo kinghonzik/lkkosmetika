@@ -51,7 +51,6 @@
       methods: {
         gMouseEnter(imgIndex) {
           this.galleryImages[imgIndex].zoomVisible = true;
-
         },
         gMouseLeave(imgIndex) {
           this.galleryImages[imgIndex].zoomVisible = false;

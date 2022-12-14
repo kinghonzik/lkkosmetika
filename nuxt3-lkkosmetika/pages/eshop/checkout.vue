@@ -100,7 +100,7 @@
                             <div class="col-md-6 mb-3" title="Povinné pole">
                                 <label>Jméno *</label>
                                 <input type="text" :class="['form-control', {'is-invalid': showErrors && inputTextError(contact.firstname)}]" 
-                                    v-model="contact.firstname" aria-describedby="firstnameFeedback" maxlength="128" required >
+                                    v-model="contact.firstname" aria-describedby="firstnameFeedback" maxlength="128" required autocomplete="given-name">
                                 <div id="firstnameFeedback" class="invalid-feedback">
                                     {{inputTextError(contact.firstname)}}
                                 </div>
@@ -108,7 +108,7 @@
                             <div class="col-md-6 mb-3" title="Povinné pole">
                                 <label>Přijmení *</label>
                                 <input type="text" :class="['form-control', {'is-invalid': showErrors && inputTextError(contact.lastname)}]" 
-                                    v-model="contact.lastname" aria-describedby="lastnameFeedback" maxlength="128" required >
+                                    v-model="contact.lastname" aria-describedby="lastnameFeedback" maxlength="128" required autocomplete="family-name">
                                 <div id="lastnameFeedback" class="invalid-feedback">
                                     {{inputTextError(contact.lastname)}}
                                 </div>
@@ -118,7 +118,7 @@
                             <div class="col-md-5 mb-3" title="Povinné pole">
                                 <label>Email *</label>
                                 <input type="text" :class="['form-control', {'is-invalid': showErrors && inputEmailError(contact.email)}]" 
-                                    v-model="contact.email" aria-describedby="emailFeedback" maxlength="128" required >
+                                    v-model="contact.email" aria-describedby="emailFeedback" maxlength="128" required autocomplete="email">
                                 <div id="emailFeedback" class="invalid-feedback">
                                     {{inputEmailError(contact.email)}}
                                 </div>
@@ -126,7 +126,7 @@
                             <div class="col-md-3 mb-3" title="Povinné pole">
                                 <label>Telefon *</label>
                                 <input type="text" :class="['form-control', {'is-invalid': showErrors && inputPhoneError(contact.phone)}]" 
-                                    v-model="contact.phone" aria-describedby="phoneFeedback" maxlength="32" required >
+                                    v-model="contact.phone" aria-describedby="phoneFeedback" maxlength="32" required autocomplete="phone">
                                 <div id="phoneFeedback" class="invalid-feedback">
                                     {{inputPhoneError(contact.phone)}}
                                 </div>
@@ -134,14 +134,14 @@
                             <div class="col-md-4 mb-3">
                                 <label>Firma</label>
                                 <input type="text" :class="['form-control']" 
-                                    v-model="contact.company" aria-describedby="companyFeedback" maxlength="128">
+                                    v-model="contact.company" aria-describedby="companyFeedback" maxlength="128" autocomplete="organization">
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="col-md-4 mb-3" title="Povinné pole">
                                 <label>Město *</label>
                                 <input type="text" :class="['form-control', {'is-invalid': showErrors && inputTextError(contact.city)}]" 
-                                    v-model="contact.city" aria-describedby="cityFeedback" maxlength="64" required >
+                                    v-model="contact.city" aria-describedby="cityFeedback" maxlength="64" required autocomplete="address-level2">
                                 <div id="cityFeedback" class="invalid-feedback">
                                     {{inputTextError(contact.city)}}
                                 </div>
@@ -149,7 +149,7 @@
                             <div class="col-md-2 mb-3" title="Povinné pole">
                                 <label>PSČ *</label>
                                 <input type="text" :class="['form-control', {'is-invalid': showErrors && inputZipError(contact.zip)}]" 
-                                    v-model="contact.zip" aria-describedby="zipFeedback" maxlength="16" required >
+                                    v-model="contact.zip" aria-describedby="zipFeedback" maxlength="16" required autocomplete="postal-code">
                                 <div id="zipFeedback" class="invalid-feedback">
                                     {{inputZipError(contact.zip)}}
                                 </div>
@@ -157,7 +157,7 @@
                             <div class="col-md-4 mb-3" title="Povinné pole">
                                 <label>Ulice *</label>
                                 <input type="text" :class="['form-control', {'is-invalid': showErrors && inputTextError(contact.street)}]" 
-                                    v-model="contact.street" aria-describedby="streetFeedback" maxlength="128" required >
+                                    v-model="contact.street" aria-describedby="streetFeedback" maxlength="128" required autocomplete="address-line1">
                                 <div id="streetFeedback" class="invalid-feedback">
                                     {{inputTextError(contact.street)}}
                                 </div>
@@ -165,7 +165,7 @@
                             <div class="col-md-2 mb-3" title="Povinné pole">
                                 <label>Číslo popisné *</label>
                                 <input type="text" :class="['form-control', {'is-invalid': showErrors && inputHouseNumberError(contact.houseNumber)}]" 
-                                    v-model="contact.houseNumber" aria-describedby="houseNumberFeedback" maxlength="16" required >
+                                    v-model="contact.houseNumber" aria-describedby="houseNumberFeedback" maxlength="16" required autocomplete="address-line1">
                                 <div id="houseNumberFeedback" class="invalid-feedback">
                                     {{inputHouseNumberError(contact.houseNumber)}}
                                 </div>
@@ -184,7 +184,7 @@
                             <div class="col-md-6 mb-3" title="Povinné pole">
                                 <label>Jméno *</label>
                                 <input type="text" :class="['form-control', {'is-invalid': showErrors && inputTextError(billingContact.firstname)}]" 
-                                    v-model="billingContact.firstname" aria-describedby="firstnameBillingFeedback" maxlength="128" required >
+                                    v-model="billingContact.firstname" aria-describedby="firstnameBillingFeedback" maxlength="128" required autocomplete="given-name-2">
                                 <div id="firstnameBillingFeedback" class="invalid-feedback">
                                     {{inputTextError(billingContact.firstname)}}
                                 </div>
@@ -192,7 +192,7 @@
                             <div class="col-md-6 mb-3" title="Povinné pole">
                                 <label>Přijmení *</label>
                                 <input type="text" :class="['form-control', {'is-invalid': showErrors && inputTextError(billingContact.lastname)}]" 
-                                    v-model="billingContact.lastname" aria-describedby="lastnameBillingFeedback" maxlength="128" required >
+                                    v-model="billingContact.lastname" aria-describedby="lastnameBillingFeedback" maxlength="128" required autocomplete="family-name-2">
                                 <div id="lastnameBillingFeedback" class="invalid-feedback">
                                     {{inputTextError(billingContact.lastname)}}
                                 </div>
@@ -202,14 +202,14 @@
                             <div class="col-md-4 mb-3">
                                 <label>Firma</label>
                                 <input type="text" :class="['form-control']" 
-                                    v-model="billingContact.company" aria-describedby="companyBillingFeedback" maxlength="128">
+                                    v-model="billingContact.company" aria-describedby="companyBillingFeedback" maxlength="128" autocomplete="company-2">
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="col-md-4 mb-3" title="Povinné pole">
                                 <label>Město *</label>
                                 <input type="text" :class="['form-control', {'is-invalid': showErrors && inputTextError(billingContact.city)}]" 
-                                    v-model="billingContact.city" aria-describedby="cityBillingFeedback" maxlength="64" required >
+                                    v-model="billingContact.city" aria-describedby="cityBillingFeedback" maxlength="64" required autocomplete="city-2">
                                 <div id="cityBillingFeedback" class="invalid-feedback">
                                     {{inputTextError(billingContact.city)}}
                                 </div>
@@ -217,7 +217,7 @@
                             <div class="col-md-2 mb-3" title="Povinné pole">
                                 <label>PSČ *</label>
                                 <input type="text" :class="['form-control', {'is-invalid': showErrors && inputZipError(billingContact.zip)}]" 
-                                    v-model="billingContact.zip" aria-describedby="zipBillingFeedback" maxlength="16" required >
+                                    v-model="billingContact.zip" aria-describedby="zipBillingFeedback" maxlength="16" required autocomplete="zip-2">
                                 <div id="zipBillingFeedback" class="invalid-feedback">
                                     {{inputZipError(billingContact.zip)}}
                                 </div>
@@ -225,7 +225,7 @@
                             <div class="col-md-4 mb-3" title="Povinné pole">
                                 <label>Ulice *</label>
                                 <input type="text" :class="['form-control', {'is-invalid': showErrors && inputTextError(billingContact.street)}]" 
-                                    v-model="billingContact.street" aria-describedby="streetBillingFeedback" maxlength="128" required >
+                                    v-model="billingContact.street" aria-describedby="streetBillingFeedback" maxlength="128" required autocomplete="street-2">
                                 <div id="streetBillingFeedback" class="invalid-feedback">
                                     {{inputTextError(billingContact.street)}}
                                 </div>
@@ -233,7 +233,7 @@
                             <div class="col-md-2 mb-3" title="Povinné pole">
                                 <label>Číslo popisné *</label>
                                 <input type="text" :class="['form-control', {'is-invalid': showErrors && inputHouseNumberError(billingContact.houseNumber)}]" 
-                                    v-model="billingContact.houseNumber" aria-describedby="houseNumberBillingFeedback" maxlength="16" required >
+                                    v-model="billingContact.houseNumber" aria-describedby="houseNumberBillingFeedback" maxlength="16" required autocomplete="houseNumber-2">
                                 <div id="houseNumberBillingFeedback" class="invalid-feedback">
                                     {{inputHouseNumberError(billingContact.houseNumber)}}
                                 </div>

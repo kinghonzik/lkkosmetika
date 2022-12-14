@@ -242,7 +242,7 @@ require_once 'CRSF.php';
         $from = $config->mailFrom;
         $subject = "Nová objednávka na LKkosmetika Eshopu!";
         $mailHtml = "<div class='data-row'> Máš novou objednávku za celkem " . $totalPrice . " " . $config->priceUnit . "  </div>";
-        $mailHtml .= "<div class='data-row'><a href='https://lkkosmetika.cz/admin/orders' target='_blank'>Zobrazit objednávky</a></div>";
+        $mailHtml .= "<div class='data-row'><a href='" . Config::$mailOrdersLink . "' target='_blank'>Zobrazit objednávky</a></div>";
         $retval = sendMail($to,$from,$subject,$mailHtml);
         if (!$retval) {
           throw new Exception('Mail se nezdarilo z nejakeho duvodu odeslat! (mail funkce vratila false)');
@@ -259,6 +259,7 @@ require_once 'CRSF.php';
         $from = $config->mailFrom;
         $subject = "Potvrzeni objednávky";
         $mailHtml = $order->mailHtml;
+        $mailHtml = str_replace('{var_symbol}', $orderId, $mailHtml);
         $retval = sendMail($to,$from,$subject,$mailHtml);
         if (!$retval) {
           throw new Exception('Mail se nezdarilo z nejakeho duvodu odeslat! (mail funkce vratila false)');

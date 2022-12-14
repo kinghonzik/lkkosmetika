@@ -12,6 +12,7 @@ class Config
    public static $authExpirationSeconds = 60 * 60;
    public static $jwtHeader = array('alg'=>'HS256','typ'=>'JWT');
    public static $CRSFExpirationSec = 60 * 30;
+   public static $mailOrdersLink = 'https://lkkosmetika.cz/admin/orders';
 }
 
 class ConfigOrderDb

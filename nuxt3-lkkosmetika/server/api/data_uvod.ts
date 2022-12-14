@@ -1,25 +1,17 @@
 export default defineEventHandler((event) => {
     return {
         header: {
-            title: 'Kosmetické ošetření - základní, aknózní, liftingové ',
+            title: 'Kosmetika Česká Bělá  ',
             meta: [
                 {
                   hid: `description`, /* HID je pro override kdyz mam dynamicky generovany starnky */
                   name: 'description',
-                  content: 'Pracuji s italskou farmaceutickou kosmetikou PhysioNatura, která využívá pro výrobu své kosmetiky extrakty z červených hroznů odrůd Negroamaro a Primitivo a extrakty z odrůdy oliv Croatia.'
+                  content: 'KOSMETICKÉ SLUŽBY, BROW & LASH BAR, MEZOTHERAPIE, DEPILACE. Ráda Váš přivítám ve svém salonu  v České Bělé.'
                 },
                 {
                   hid: `keywords`,
                   name: 'keywords',
-                  content: 'Kosmeticke osetreni \
-                    Lifting \
-                    Liftingove osetreni \
-                    Chemicky peeling \
-                    Akne \
-                    Osetreni aknozni pleti \
-                    Rasy \
-                    Physionatura \
-                    Hystorie kosmetiky'
+                  content: 'Kosmetické služby, Kosmetika, Brow & lash bar, Mezoterapie, Depilace, Uprava oboci, Mikrojehlicky, Česká Bělá, Salon'
                 }
             ],
         },

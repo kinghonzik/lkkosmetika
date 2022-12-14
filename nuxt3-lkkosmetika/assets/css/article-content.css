@@ -54,6 +54,17 @@
 
 .content-header .desc {
     display: block;
+    font-family: sans-serif;
+    font-size: 1em;
+    line-height: 2em;
+}
+
+.content-header .desc p {
+    line-height: inherit;
+}
+
+.text-font-size {
+    font-size: 10.5pt;
 }
 
 .content-header .desc p {

@@ -54,6 +54,12 @@
                   </td>
                 </tr>
                 <tr>
+                  <td> Číslo účtu (platba předem apod...)</td>
+                  <td>
+                    <input class="form-control" type="text" v-model="config.accNumber"/>
+                  </td>
+                </tr>
+                <tr>
                   <td>FB</td>
                   <td>
                     <input class="form-control" type="text" v-model="config.linkFacebook"/>
@@ -79,7 +85,7 @@
                   <th>Název</th>
                   <th style="width: 1%"></th>
                   <th style="width: 1%; min-width: 150px;"> Cena</th>
-                  <th>Popisek</th>
+                  <th>Poznámka</th>
                 </tr>
               </thead>
               <tbody>
@@ -107,7 +113,7 @@
                   <th>Název</th>
                   <th style="width: 1%"></th>
                   <th style="width: 1%; min-width: 150px;"> Cena</th>
-                  <th>Popisek</th>
+                  <th>Poznámka</th>
                 </tr>
               </thead>
               <tbody>

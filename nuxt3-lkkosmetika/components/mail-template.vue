@@ -7,9 +7,18 @@
                     <div class='data-row'> Stav vaší objednávky byl změněn na: <b>{{newState ??order.state}}</b></div>
                     <div class='data-row'>Objednávka číslo: {{order.id}} </div>
                 </template>
-                <template v-if="type == 'new_order'">
+                <template v-if="type == 'new_order' && order.payment != 'bankovni-prevod'">
                     <div class='title'> Dobrý den vážený zákazníku </div>
                     <div class='data-row'> Děkujeme Vám za vaší objednávku. Nyní budeme usilovně pracovat na jejím vyřízení.</div>
+                </template>
+                <template v-if="type == 'new_order' && order.payment == 'bankovni-prevod'">
+                    <div class='title'> Dobrý den vážený zákazníku </div>
+                    <div class='data-row'> Děkujeme Vám za vaší objednávku.</div>
+                    <div class='data-row'> 
+                        <div>Proveďte prosím platbu ve výši <b>{{ order.totalPrice}} {{config.priceUnit}}</b></div>
+                        <div>Číslo účtu  <b>{{ config.accNumber}}</b> </div>
+                        <div>Variabilní symbol  <b>{{ '{var_symbol}'}} </b></div>
+                    </div>
                 </template>
                 <div v-if="mailToCustomerDesc" class='data-row' >{{mailToCustomerDesc}}</div>
                 <div class="recap-section">

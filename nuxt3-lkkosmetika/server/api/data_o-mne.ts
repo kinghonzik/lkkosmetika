@@ -11,9 +11,7 @@ export default defineEventHandler((event) => {
                 {
                   hid: `keywords`,
                   name: 'keywords',
-                  keywords: 'Lucie Kovarikova\
-                  Kosmetika\
-                  O mne'
+                  keywords: 'Lucie Kovarikova, Kosmetika, O mne'
                 }
             ],
         },
