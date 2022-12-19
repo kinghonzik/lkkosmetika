@@ -1,6 +1,6 @@
 <template>
     <div class="footer">
-        <div class="soc_icons_box" v-if="config" style="text-align: center; padding-top: 10px;">
+        <div v-if="config" class="soc_icons_box"  style="text-align: center; padding-top: 10px;">
             <div v-if="config.linkFacebook" class="logo-border">
                 <a :href="config.linkFacebook" target="_blank" rel="dofollow" title="Facebook profil">
                     <img class="logo" src="~/assets/img/facebook.png" alt="Facebook logo" width="30" height="30"/>
@@ -11,6 +11,8 @@
                     <img class="logo" src="~/assets/img/instagram2.png" alt="Instagram logo" width="30" height="30"/>
                 </a>
             </div>
+        </div>
+        <div v-else style="text-align: center; padding-top: 40px;">
         </div>
         <div class="footer-flex-container">
             <div class="footer-flex-item">
@@ -69,7 +71,9 @@
         try {
             this.config = JSON.parse(await $fetch(this.$config.bUrl + 'getConfig.php'));
         } catch(exception) {
-            alert('Došlo k nějaké chybě při načítání dat.');
+            // potrebujeme aby web nerusene bezel i pokud se nepripojime k DB
+            this.config = null;
+            //alert('Došlo k nějaké chybě při načítání dat.');
             throw exception;
         }
       }

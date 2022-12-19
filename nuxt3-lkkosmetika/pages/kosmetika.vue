@@ -8,7 +8,7 @@
         <div class="flex-container">
             <div class="flex-border-image">
             <div class="rectangle-bordered">&nbsp;</div>
-            <img src="/img/zakladni kosmeticke osetreni.jpg" alt="Základní kosmetické ošetření" width="474" height="316"></div>
+            <img src="/img/zakladni-kosmeticke-osetreni.jpg" alt="Základní kosmetické ošetření" width="474" height="316"></div>
             <div class="flex-border-text">
                 <h3>ZÁKLADNÍ KOSMETICKÉ OŠETŘENÍ</h3>
                 <br><span class="text-font-size">Dermokosmetikou PhysioNatura</span><br><br><span class="text-font-size"><strong>Ošetření zahrnuje: čištění, tonizace, jemné dočištění tvaru obočí a barvení, barvení řas, depilace horního rtu, masáž obličeje a dekoltu, mikromasáž očního okolí, povrchové čištění UZ špachtlí poté ruční čištění pleti, krémový peeling s meruňkovými jadérky, hydratační maska, sérum, hydratační závěrečný krém na pleť a rty</strong>.</span><br><br><span class="text-font-size">Toto ošetření se především zaměřuje na dokonalé čištění, příjemnou relaxaci a uvolnění s vyhledávaným anti-ageing efektem. Doporučuji provádět od 25 let, během ošetření zažijete luxusní masáž očního okolí. Doporučuji opakovat po třech až čtyřech týdnech.</span><br><br>
@@ -23,7 +23,7 @@
             </div>
             <div class="flex-border-image">
             <div class="rectangle-filled">&nbsp;</div>
-            <img src="/img/osetreni mladistve pleti.jpg" alt="ošetření mladistvé pleti" width="400" height="316"></div>
+            <img src="/img/osetreni-mladistve-pleti.jpg" alt="ošetření mladistvé pleti" width="400" height="316"></div>
         </div>
         <div class="flex-container">
             <div class="flex-border-image">
@@ -43,7 +43,7 @@
             </div>
             <div class="flex-border-image">
             <div class="rectangle-filled">&nbsp;</div>
-            <img src="/img/liftingove kosmeticke osetreni2.jpg" alt="liftingové kosmetické ošetření" width="474" height="316"></div>
+            <img src="/img/liftingove-kosmeticke-osetreni2.jpg" alt="liftingové kosmetické ošetření" width="474" height="316"></div>
         </div>
         <div class="flex-container">
             <div class="flex-border-image">
@@ -82,8 +82,21 @@
         }
       },
       async mounted() {
-        const data = await $fetch('/api/data_kosmetika');
-        this.headerParams = data.header;
+        this.headerParams = {
+            title: 'Kosmetické ošetření - základní, aknózní, liftingové ',
+            meta: [
+                {
+                  hid: `description`, /* HID je pro override kdyz mam dynamicky generovany starnky */
+                  name: 'description',
+                  content: 'Pracuji s italskou farmaceutickou kosmetikou PhysioNatura, která využívá pro výrobu své kosmetiky extrakty z červených hroznů odrůd Negroamaro a Primitivo a extrakty z odrůdy oliv Croatia.'
+                },
+                {
+                  hid: `keywords`,
+                  name: 'keywords',
+                  content: 'Kosmeticke osetreni, Lifting, Liftingove osetreni, Chemicky peeling, Akne, Osetreni aknozni pleti, Rasy, Physionatura, Hystorie kosmetiky'
+                }
+            ],
+        };
       }
     }
 </script>

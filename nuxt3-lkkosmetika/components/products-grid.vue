@@ -21,8 +21,8 @@
                                     <div v-else class="stock-status">
                                         <span :class="[product.data.stockStatus == 'skladem' ? 'green' : 'orange']">{{product.data.stockStatus}}</span>
                                     </div>
-                                    <div class="href-button" v-if="product.data.variants?.length"><a :id="'product-id-' + product.id" :href="'/eshop/product/' + product.data.id">Vybrat variantu</a></div>
-                                    <div class="href-button" v-else><a :id="'product-id-' + product.id" :href="'/eshop/product/' + product.data.id">Přejít na detail</a></div>
+                                    <div class="href-button" v-if="product.data.variants?.length"><NuxtLink :id="'product-id-' + product.id" :href="'/eshop/product?name=' + product.data.id">Vybrat variantu</NuxtLink></div>
+                                    <div class="href-button" v-else><NuxtLink :id="'product-id-' + product.id" :href="'/eshop/product?name=' + product.data.id">Přejít na detail</NuxtLink></div>
                                 </div>
                             </div>
                         </div>
@@ -35,6 +35,9 @@
 
 <script>
     export default defineComponent({
+        generate: {
+
+        },
         props: ['productsList', 'config'],
         data() {
             return {

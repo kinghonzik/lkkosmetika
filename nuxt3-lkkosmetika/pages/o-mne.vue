@@ -21,8 +21,21 @@
         }
       },
       async mounted() {
-        const data = await $fetch('/api/data_o-mne');
-        this.headerParams = data.header;
+        this.headerParams = {
+            title: 'Lucie Kovaříková kosmetika',
+            meta: [
+                {
+                  hid: `description`, /* HID je pro override kdyz mam dynamicky generovany starnky */
+                  name: 'description',
+                  content: 'Lucie Kováříková je frekventantkou kosmetického institutu z Hradce Králové, kde zakončila profesní zkouškou akreditovaný kurz kosmetička pod záštitou ministerstva školství, mládeže a tělovýchovy.'
+                },
+                {
+                  hid: `keywords`,
+                  name: 'keywords',
+                  keywords: 'Lucie Kovarikova, Kosmetika, O mne'
+                }
+            ],
+        };
       }
     }
 </script>

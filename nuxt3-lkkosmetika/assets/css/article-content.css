@@ -46,10 +46,10 @@
     line-height: 1.3em;
     color: #000000;
     font-family: "Libre Baskerville", Sans-serif;
-    font-size: 55px;
+    font-size: 3em;
     font-weight: 400;
     text-transform: none;
-    overflow-wrap: anywhere;
+    overflow-wrap: normal;
 }
 
 .content-header .desc {

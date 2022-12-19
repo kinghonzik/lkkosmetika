@@ -88,7 +88,10 @@
 </template>
 
 <script>
-    export default defineComponent({
+    export default {
+      generate: {
+        crawler: true
+      },
       data() {
         return {
           headerParams: null,
@@ -104,7 +107,7 @@
       },
       computed: {
         window() { return window },
-        title() {return this.product?.data.title ?? 'hovno'},
+        title() {return this.product?.data.title ?? 'title-empty'},
         galleryImages() {
           const arr = [];
           if (this.product.data.image?.src)
@@ -146,13 +149,21 @@
             throw exception;
         }
 
-        const route = useRoute();
-        const productName = route.params.product_name;
-
         try {
-          const data = await $fetch(this.$config.bUrl + 'getProductByID.php?id=' + productName);
-          const dataParsered = JSON.parse(data);
-          this.product = dataParsered;
+          const route = useRoute();
+          const productName = route.query.name; //route.params.product_name;
+
+          // nas hosting zrejme neumi vyhledavani v JSONU :D
+          //const data = await $fetch(this.$config.bUrl + 'getProductByID.php?id=' + productName);
+          //const dataParsered = JSON.parse(data);
+          //this.product = dataParsered;
+
+          const data = await $fetch(this.$config.bUrl + 'getProducts.php');
+          const productsList= JSON.parse(data);
+          this.product = productsList?.find(itm => itm.data.id == productName);
+            if (!this.product)
+              throw ('Produkt ' + productName + ' nenalezen!')
+
         } catch(exception) {
             alert('Došlo k nějaké chybě');
             throw exception;
@@ -186,7 +197,7 @@
             ],
         }
       }
-    })
+    }
 </script>
 
 <style scoped>

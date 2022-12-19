@@ -11,7 +11,7 @@
         <div class="flex-container">
             <div class="flex-border-image">
                 <div class="rectangle-bordered">&nbsp;</div>
-                <img src="/img/depilace neutral.jpg" alt="Depilace - brazislká dámská" width="474" height="316">
+                <img src="/img/depilace-neutral.jpg" alt="Depilace - brazislká dámská" width="474" height="316">
             </div>
             <div class="flex-border-text">
             <h3>DÁMSKÁ BRAZILSKÁ DEPILACE</h3>
@@ -58,7 +58,7 @@
         <div class="flex-container">
             <div class="flex-border-image">
                 <div class="rectangle-bordered">&nbsp;</div>
-                <img src="/img/depilace pastou2.jpg" alt="Depilace cukrovou pastou" width="474" height="316">
+                <img src="/img/depilace-pastou2.jpg" alt="Depilace cukrovou pastou" width="474" height="316">
             </div>
             <div class="flex-border-text">
             <h4>DEPILACE CUKROVOU PASTOU CENÍK</h4>
@@ -146,13 +146,13 @@
             </div>
         <div class="flex-border-image">
             <div class="rectangle-filled">&nbsp;</div>
-            <img src="/img/roll-on vosk.jpg" alt="Depilace roll-on voskem" width="474" height="316">
+            <img src="/img/roll-on-vosk.jpg" alt="Depilace roll-on voskem" width="474" height="316">
         </div>
         </div>
         <div class="flex-container">
             <div class="flex-border-image">
                 <div class="rectangle-bordered">&nbsp;</div>
-                <img src="/img/depilace voskem2.jpg" alt="Depilace cirépil voskem" width="474" height="316">
+                <img src="/img/depilace-voskem2.jpg" alt="Depilace cirépil voskem" width="474" height="316">
             </div>
             <div class="flex-border-text">
             <h4>DEPILACE ŠETRNÝM SAMOSTRŽNÝM VOSKEM CIRÉPIL CENÍK</h4>
@@ -189,8 +189,21 @@
         }
       },
       async mounted() {
-        const data = await $fetch('/api/data_depilace');
-        this.headerParams = data.header;
+        this.headerParams = {
+            title: 'Depilace - Cukrová pasta, roll-on, cirépil',
+            meta: [
+                {
+                  hid: `description`, /* HID je pro override kdyz mam dynamicky generovany starnky */
+                  name: 'description',
+                  content: 'Nabízím všechny druhy depilací, dámské i pánské, depiluji jak samostržnými vosky, roll on vosky, tak cukrovou pastou, která je mnohem šetrnější. '
+                },
+                {
+                  hid: `keywords`,
+                  name: 'keywords',
+                  content: 'Cukrova pasla, Roll on, Vosk, Brazilska depilace, Cukrova pasta, Cirepil, Samotrzny, Chloupky, Holit'
+                }
+            ],
+        };
       }
     }
 </script>

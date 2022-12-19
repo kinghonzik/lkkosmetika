@@ -27,8 +27,6 @@
         }
       },
       async mounted() {
-        console.log('monted! - HtmlHeader')
-        console.log(this.params);
       }
     }
   </script>

@@ -139,7 +139,8 @@ import OrderStates from '/models/OrderStates.ts';
             }
         },
         btClickOrderDetail(item) {
-            window.location.href = '/admin/order/' + item.id;
+            //window.location.href = '/admin/order/' + item.id;
+            window.location.href = '/admin/order?id=' + item.id;
         }
     },
     async mounted() {

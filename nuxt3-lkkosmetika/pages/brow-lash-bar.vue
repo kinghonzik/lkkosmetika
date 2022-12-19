@@ -12,7 +12,7 @@
         <div class="flex-container">
             <div class="flex-border-image">
             <div class="rectangle-bordered">&nbsp;</div>
-            <img src="/img/bio Henna2.jpg" alt="Biohena - architektura obočí" width="474" height="316"></div>
+            <img src="/img/bio-Henna2.jpg" alt="Biohena - architektura obočí" width="474" height="316"></div>
             <div class="flex-border-text">
                 <h3>BARVENÍ OBOČÍ BIO HENNOU</h3>
                 <p><span class="text-font-size">a precizní úprava pomocí architektury obočí</span></p>
@@ -28,7 +28,7 @@
             </div>
             <div class="flex-border-image">
                 <div class="rectangle-filled">&nbsp;</div>
-                <img src="/img/lash lifting.jpg" alt="Lash lifting bomb - řasy natočené, silnější, prodloužené." width="474" height="316">
+                <img src="/img/lash-lifting.jpg" alt="Lash lifting bomb - řasy natočené, silnější, prodloužené." width="474" height="316">
             </div>
         </div>	
     </div>
@@ -42,8 +42,21 @@
         }
       },
       async mounted() {
-        const data = await $fetch('/api/data_lash_brow_bar');
-        this.headerParams = data.header;
+        this.headerParams = {
+            title: 'BROW & LASH BAR - Barvení obočí biohennou a lash lifting bomb',
+            meta: [
+                {
+                  hid: `description`, /* HID je pro override kdyz mam dynamicky generovany starnky */
+                  name: 'description',
+                  content: 'Správná úprava obočí se stala velice významným trendem, přijďte do mého salónu vybrat správný tvar pomocí architektury obočí. Lash lifting je speciální úprava přirozených řas, které se natočí, opticky prodlouží, obarví a vyživí.'
+                },
+                {
+                  hid: `keywords`,
+                  name: 'keywords',
+                  content: 'KBio hena, Lash lifting bomb, Rasy, Uprava, Oboci'
+                }
+            ],
+        }
       }
     }
 </script>

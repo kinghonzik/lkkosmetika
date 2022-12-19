@@ -142,10 +142,12 @@
           this.updateUrl();
         },
         btClickAddProduct() {
-          navigateTo('/admin/product/newProduct')
+          //navigateTo('/admin/product/newProduct')
+          navigateTo('/admin/product?name=newProduct')
         },
         btClickEditProduct(product) {
-          navigateTo('/admin/product/' + product.data.id)
+          //navigateTo('/admin/product/' + product.data.id)
+          navigateTo('/admin/product?name=' + product.data.id)
         },
         async btClickDelete(product) {
           console.log(product);

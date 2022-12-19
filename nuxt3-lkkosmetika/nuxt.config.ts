@@ -1,4 +1,5 @@
 export default {
+    target: 'static',
     css: [
         '@/assets/css/global.css',
         'bootstrap/dist/css/bootstrap.min.css'
@@ -20,7 +21,7 @@ export default {
         }
     },
     publicRuntimeConfig: {
-        bUrl: process.env.NODE_ENV === 'production' ? 'http://localhost/backend-lkkoksmetika/' : 'http://localhost/lkkosmetika/backend-lkkoksmetika/',
-        mailCss: process.env.NODE_ENV === 'production' ? 'http://localhost/backend-lkkoksmetika/css/mail.css' : 'http://localhost/lkkosmetika/backend-lkkoksmetika/css/mail.css',
+        bUrl: process.env.NODE_ENV === 'production' ? 'https://lkkosmetika.cz/backend-lkkoksmetika/' : 'http://localhost/lkkosmetika/backend-lkkoksmetika/',
+        mailCss: process.env.NODE_ENV === 'production' ? 'https://lkkosmetika.cz/backend-lkkoksmetika/css/mail.css' : 'http://localhost/lkkosmetika/backend-lkkoksmetika/css/mail.css',
     }
 }
