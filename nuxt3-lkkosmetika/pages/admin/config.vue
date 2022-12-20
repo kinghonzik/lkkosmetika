@@ -1,82 +1,73 @@
 <template>
     <div class="page-content"> 
       <div v-if="config">
-        <config-manufacturer 
-          :products="productsList" :config="config" :utils="utils" 
-          @configSaveAndReload="configSaveAndReload()">
-        </config-manufacturer>
-        <config-category
-          :products="productsList" :config="config" :utils="utils" 
-          @configSaveAndReload="configSaveAndReload()">
-        </config-category>
-        <config-usage
-          :products="productsList" :config="config" :utils="utils" 
-          @configSaveAndReload="configSaveAndReload()">
-        </config-usage>
-        <!-- Sekce Ostatní -->
-        <div v-if="config" id="section-other" class="section col-sm-6">
-          <div class="title">Ostatní</div>
+        <div v-if="config" class="coltrol-panel">
+          <button @click="btClickUlozit()" class="btn btn-success"> Uložit konfiguraci </button>
+        </div>
+        <!-- Sekce Základ -->
+        <div v-if="config" id="section-other" class="section col-sm-12">
+          <div class="title">Základní nastavení</div>
           <div class="content">
-            <table class="table">
-              <tbody>
-                <tr>
-                  <td>DPH - %</td><td><input class="form-control" type="number" v-model="config.dph"/></td>
-                </tr>
-                <tr>
-                  <td>měna</td>
-                  <td>
-                    <input class="form-control" type="text" v-model="config.priceUnit"/>
-                  </td>
-                </tr>
-                <tr>
-                  <td>maily <span class="my-info-icon" title="Adresy na které budou chodit nové objednávky. 1 řádek = 1 adresa">i</span></td>
-                  <td>
-                    <textarea class="form-control" rows="3" v-model="config.mails"></textarea>
-                  </td>
-                </tr>
-                <tr>
-                  <td>mail - from <span class="my-info-icon" title="Adresa, ze které přijde mail zákazníkovi">i</span></td>
-                  <td>
-                    <input class="form-control" type="text" v-model="config.mailFrom"/>
-                  </td>
-                </tr>
-                <tr>
-                  <td> Příjem objednávek</td>
-                  <td>
-                    <button v-if="config.newOrdersAllowed" class="btn btn-success btn-sm" @click="config.newOrdersAllowed = !config.newOrdersAllowed"> Povoleno </button>
-                    <button v-else class="btn btn-danger btn-sm" @click="config.newOrdersAllowed = !config.newOrdersAllowed"> Zakázáno </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td> Informativní zpráva pro zákazníky </td>
-                  <td>
-                    <textarea class="form-control" rows="3" v-model="config.infoMsg"></textarea>
-                  </td>
-                </tr>
-                <tr>
-                  <td> Číslo účtu (platba předem apod...)</td>
-                  <td>
-                    <input class="form-control" type="text" v-model="config.accNumber"/>
-                  </td>
-                </tr>
-                <tr>
-                  <td>FB</td>
-                  <td>
-                    <input class="form-control" type="text" v-model="config.linkFacebook"/>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Instagram</td>
-                  <td>
-                    <input class="form-control" type="text" v-model="config.linkInstagram"/>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+
+            <div class="form-group row">
+              <label for="staticEmail" class="col-sm-3 col-form-label">DPH - %</label>
+              <div class="col-sm-3">
+                <input class="form-control" type="number" v-model="config.dph"/>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="staticEmail" class="col-sm-3 col-form-label">Měna</label>
+              <div class="col-sm-3">
+                <input class="form-control" type="text" v-model="config.priceUnit"/>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="staticEmail" class="col-sm-3 col-form-label">Maily</label>
+              <div class="col-sm-3">
+                <textarea class="form-control" rows="3" v-model="config.mails"></textarea>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="staticEmail" class="col-sm-3 col-form-label">Mail - from</label>
+              <div class="col-sm-3">
+                <input class="form-control" type="text" v-model="config.mailFrom"/>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="staticEmail" class="col-sm-3 col-form-label">Příjem objednávek</label>
+              <div class="col-sm-9">
+                <button v-if="config.newOrdersAllowed" class="btn btn-success btn-sm" @click="config.newOrdersAllowed = !config.newOrdersAllowed"> Povoleno </button>
+                <button v-else class="btn btn-danger btn-sm" @click="config.newOrdersAllowed = !config.newOrdersAllowed"> Zakázáno </button>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="staticEmail" class="col-sm-3 col-form-label">Informativní zpráva pro zákazníky</label>
+              <div class="col-sm-9">
+                <textarea class="form-control" rows="3" v-model="config.infoMsg"></textarea>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="staticEmail" class="col-sm-3 col-form-label">Číslo účtu (platba předem apod...)</label>
+              <div class="col-sm-3">
+                <input class="form-control" type="text" v-model="config.accNumber"/>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="staticEmail" class="col-sm-3 col-form-label">FB link</label>
+              <div class="col-sm-9">
+                <input class="form-control" type="text" v-model="config.linkFacebook"/>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="staticEmail" class="col-sm-3 col-form-label">Instagram link</label>
+              <div class="col-sm-9">
+                <input class="form-control" type="text" v-model="config.linkInstagram"/>
+              </div>
+            </div>
           </div>
         </div>
         <div v-if="config" id="section-shipping" class="section col-sm-12">
-          <div class="title">doprava</div>
+          <div class="title">Doprava</div>
           <div class="content">
             <table class="table">
               <thead>
@@ -104,7 +95,7 @@
           </div>
         </div>
         <div v-if="config" id="section-payment" class="section col-sm-12">
-          <div class="title">platba</div>
+          <div class="title">Platba</div>
           <div class="content">
             <table class="table">
               <thead>
@@ -131,6 +122,18 @@
             </table>
           </div>
         </div>
+        <config-manufacturer 
+          :products="productsList" :config="config" :utils="utils" 
+          @configSaveAndReload="configSaveAndReload()">
+        </config-manufacturer>
+        <config-category
+          :products="productsList" :config="config" :utils="utils" 
+          @configSaveAndReload="configSaveAndReload()">
+        </config-category>
+        <config-usage
+          :products="productsList" :config="config" :utils="utils" 
+          @configSaveAndReload="configSaveAndReload()">
+        </config-usage>
         <div v-if="config" class="coltrol-panel">
           <button @click="btClickUlozit()" class="btn btn-success"> Uložit konfiguraci </button>
         </div>
@@ -225,6 +228,10 @@ import DefPaymentOptions from '/models/defPaymentOptions.ts';
 
   #section-other table td {
     border: 0;
+  }
+
+  .coltrol-panel {
+    padding-top: 20px; padding-left: 10px;
   }
 
 </style>

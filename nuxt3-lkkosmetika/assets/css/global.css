@@ -36,3 +36,21 @@ input[type=checkbox]{
     width: 18px;
     height: 18px;
 }
+
+.spinner-border {
+    color: #bdb76b;
+}
+
+html {
+    height: 100%;
+  }
+
+body {
+    height: inherit;
+}
+
+#__nuxt {
+    height: inherit;
+    display: flex;
+    flex-direction: column;
+}

@@ -20,11 +20,11 @@
         <div v-if="successSentMsg" tabindex="-1">
             <div class="success-sent-message"> {{successSentMsg}}</div>
         </div>
-        <div v-else>
-            <div v-if="!documentReady">
-                <div class="section-title">Stránka se ještě načítá, prosím čekejte ...</div>
+        <div v-else style="text-align: center;">
+            <div v-if="!documentReady" class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
             </div>
-            <div v-else>
+            <div v-else style="text-align: left;">
                 <div v-if="!matchedProducts?.length">
                     <div class="section-title">V košíku nemáte zatím žádný produkt.</div>
                 </div>
@@ -154,20 +154,12 @@
                                     {{inputZipError(contact.zip)}}
                                 </div>
                             </div>
-                            <div class="col-md-4 mb-3" title="Povinné pole">
-                                <label>Ulice *</label>
-                                <input type="text" :class="['form-control', {'is-invalid': showErrors && inputTextError(contact.street)}]" 
-                                    v-model="contact.street" aria-describedby="streetFeedback" maxlength="128" required autocomplete="address-line1">
-                                <div id="streetFeedback" class="invalid-feedback">
-                                    {{inputTextError(contact.street)}}
-                                </div>
-                            </div>
-                            <div class="col-md-2 mb-3" title="Povinné pole">
-                                <label>Číslo popisné *</label>
-                                <input type="text" :class="['form-control', {'is-invalid': showErrors && inputHouseNumberError(contact.houseNumber)}]" 
-                                    v-model="contact.houseNumber" aria-describedby="houseNumberFeedback" maxlength="16" required autocomplete="address-line1">
-                                <div id="houseNumberFeedback" class="invalid-feedback">
-                                    {{inputHouseNumberError(contact.houseNumber)}}
+                            <div class="col-md-6 mb-3" title="Povinné pole">
+                                <label>Adresa *</label>
+                                <input type="text" :class="['form-control', {'is-invalid': showErrors && inputTextError(contact.address)}]" 
+                                    v-model="contact.address" aria-describedby="addressFeedback" maxlength="128" required autocomplete="address-line1">
+                                <div id="addressFeedback" class="invalid-feedback">
+                                    {{inputTextError(contact.address)}}
                                 </div>
                             </div>
                         </div>
@@ -222,20 +214,12 @@
                                     {{inputZipError(billingContact.zip)}}
                                 </div>
                             </div>
-                            <div class="col-md-4 mb-3" title="Povinné pole">
-                                <label>Ulice *</label>
-                                <input type="text" :class="['form-control', {'is-invalid': showErrors && inputTextError(billingContact.street)}]" 
-                                    v-model="billingContact.street" aria-describedby="streetBillingFeedback" maxlength="128" required autocomplete="street-2">
-                                <div id="streetBillingFeedback" class="invalid-feedback">
-                                    {{inputTextError(billingContact.street)}}
-                                </div>
-                            </div>
-                            <div class="col-md-2 mb-3" title="Povinné pole">
-                                <label>Číslo popisné *</label>
-                                <input type="text" :class="['form-control', {'is-invalid': showErrors && inputHouseNumberError(billingContact.houseNumber)}]" 
-                                    v-model="billingContact.houseNumber" aria-describedby="houseNumberBillingFeedback" maxlength="16" required autocomplete="houseNumber-2">
-                                <div id="houseNumberBillingFeedback" class="invalid-feedback">
-                                    {{inputHouseNumberError(billingContact.houseNumber)}}
+                            <div class="col-md-6 mb-3" title="Povinné pole">
+                                <label>Adresa *</label>
+                                <input type="text" :class="['form-control', {'is-invalid': showErrors && inputTextError(billingContact.address)}]" 
+                                    v-model="billingContact.address" aria-describedby="addressBillingFeedback" maxlength="128" required autocomplete="address-2">
+                                <div id="addressBillingFeedback" class="invalid-feedback">
+                                    {{inputTextError(billingContact.address)}}
                                 </div>
                             </div>
                         </div>
@@ -349,8 +333,7 @@ export default {
                 lastname: '',
                 city: '',
                 zip: '',
-                street: '',
-                houseNumber: '',
+                address: '',
                 email: '',
                 phone: '',
                 company: '',
@@ -360,8 +343,7 @@ export default {
                 lastname: '',
                 city: '',
                 zip: '',
-                street: '',
-                houseNumber: '',
+                address: '',
                 company: '',
             },
             bllingAddressSame: true,
@@ -476,14 +458,6 @@ export default {
                 return 'Vyplňte prosím pole.'
             if (text.length < 2)
                 return 'Nějak málo znaků. PSČ má obvykle 5.'
-            const regex = /^[0-9 ]+$/;
-            if(!regex.test(text))
-                return 'Obsahuje nevalidní znaky!';
-            return null;
-        },
-        inputHouseNumberError(text) {
-            if (!text || !text.length)
-                return 'Vyplňte prosím pole.'
             const regex = /^[0-9 ]+$/;
             if(!regex.test(text))
                 return 'Obsahuje nevalidní znaky!';

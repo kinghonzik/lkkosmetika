@@ -1,30 +1,28 @@
 <template>
-  <div>
-    <template v-if="ready">
-      <template v-if="route?.path.startsWith('/admin')">
-        <template v-if="auth.isAuthenticated">
-          <AdminMenu/>
-          <div class="page-content-admin">
-            <NuxtPage />
-          </div>
-        </template>
-        <template v-else>
-          <Menu />
-          <div class="page-content-admin">
-            <login />
-          </div>
-          <Footer />
-        </template>
+  <template v-if="ready">
+    <template v-if="route?.path.startsWith('/admin')">
+      <template v-if="auth.isAuthenticated">
+        <AdminMenu/>
+        <div class="page-content-admin">
+          <NuxtPage />
+        </div>
       </template>
       <template v-else>
         <Menu />
-        <div class="page-content">
-          <NuxtPage />
+        <div class="page-content-admin">
+          <login />
         </div>
         <Footer />
       </template>
     </template>
-  </div>
+    <template v-else>
+      <Menu />
+      <div class="page-content">
+        <NuxtPage />
+      </div>
+      <Footer />
+    </template>
+  </template>
 </template>
 
 <script>
@@ -75,10 +73,12 @@ export default defineComponent({
 .page-content {
   max-width: 1200px;
   margin: auto;
+  /*flex: 1;*/
   padding-left: 8px;
   padding-right: 8px;
 }
 .page-content-admin {
+  flex: 1;
   padding-left: 10px;
   padding-right: 10px;
 }

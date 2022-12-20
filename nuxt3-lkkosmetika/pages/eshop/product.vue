@@ -5,6 +5,10 @@
     <cart></cart>
       <div class="hrefbutton" @click="window.history.back()" style="width: fit-content">Zpět na seznam produktů </div>
     
+    <div v-if="!ready" class="spinner-border" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+
     <div v-if="product && config" class="product">
       <div v-if="true" class="title"><h1 style="font-size: 2rem">{{product.data.title}}</h1></div>
       <div class="flex-container">
@@ -103,6 +107,7 @@
           lightBoxVisible: false,
           cookie: null,
           showSuccessInsertMsg: false,
+          ready: false,
         }
       },
       computed: {
@@ -168,6 +173,8 @@
             alert('Došlo k nějaké chybě');
             throw exception;
         }
+
+        this.ready = true;
 
         // specifikace pro testovaci ucely
         //this.product.data.specifications = [{title: "mnozstvi", value: "15ml"},{title: "spec2", value: "18ks"}]

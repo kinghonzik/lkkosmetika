@@ -1,6 +1,9 @@
 <template>
     <div>
-      <div v-if="config">
+      <div v-if="!ready" class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <div v-if="ready && config">
         <eshop-info-msg :config="config"></eshop-info-msg>
         <cart></cart>
         <nav class="navbar navbar-expand-lg navbar-light">
@@ -56,7 +59,8 @@
           selectedCat: null,
           filteredProducts: [],
           hoverItem: null,
-          usages: []
+          usages: [],
+          ready: false,
         }
       },
       computed: {
@@ -165,6 +169,7 @@
           const data = await $fetch(this.$config.bUrl + 'getProducts.php');
           const dataParsered = JSON.parse(data);
           this.productsList = dataParsered;
+          this.ready = true;
         } catch(exception) {
             alert('Došlo k nějaké chybě');
             throw exception;

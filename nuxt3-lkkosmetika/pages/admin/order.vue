@@ -158,12 +158,8 @@
                             <td><input type="text" :class="['form-control']" v-model="contact.zip" maxlength="128"/></td>
                         </tr>
                         <tr>
-                            <td><label>Ulice</label></td>
-                            <td><input type="text" :class="['form-control']" v-model="contact.street" maxlength="128"/></td>
-                        </tr>
-                        <tr>
-                            <td><label>Číslo popisné</label></td>
-                            <td><input type="text" :class="['form-control']" v-model="contact.houseNumber" maxlength="128"/></td>
+                            <td><label>Adresa</label></td>
+                            <td><input type="text" :class="['form-control']" v-model="contact.address" maxlength="128"/></td>
                         </tr>
                     </tbody>
                 </table>
@@ -199,12 +195,8 @@
                             <td><input type="text" :class="['form-control']" v-model="billingContact.zip" maxlength="128"/></td>
                         </tr>
                         <tr>
-                            <td><label>Ulice</label></td>
-                            <td><input type="text" :class="['form-control']" v-model="billingContact.street" maxlength="128"/></td>
-                        </tr>
-                        <tr>
-                            <td><label>Číslo popisné</label></td>
-                            <td><input type="text" :class="['form-control']" v-model="billingContact.houseNumber" maxlength="128"/></td>
+                            <td><label>Adresa</label></td>
+                            <td><input type="text" :class="['form-control']" v-model="billingContact.address" maxlength="128"/></td>
                         </tr>
                     </tbody>
                 </table>
@@ -414,7 +406,7 @@ import Editor from '@tinymce/tinymce-vue'
         async fetchOrderData() {
             const route = useRoute();
             const orderId = route.query.id; //route.params.order_id;
-            var resposne = await $fetch(this.$config.bUrl + 'getOrderByID.php?id=' + orderId);
+            var resposne = await $fetch(this.$config.bUrl + 'getOrderById.php?id=' + JSON.stringify(orderId));
             this.order = JSON.parse(resposne);
         },
     },

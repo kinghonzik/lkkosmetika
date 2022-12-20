@@ -32,7 +32,7 @@
                         <a class="nav-link" :class="{ active: route.name == 'kontakt' }" href="/kontakt">Kontakt</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" :class="{ active: route.name.startsWith('eshop') }" href="/eshop/products">Eshop</a>
+                        <a class="nav-link" :class="{ active: route.name.startsWith('eshop') }" href="/eshop/products" style="color: #fc6600">! Eshop !</a>
                     </li>
                 </ul>
             </div>

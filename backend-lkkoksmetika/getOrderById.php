@@ -2,5 +2,5 @@
   require_once 'config.php';
   require_once 'model-get.php';
 
-  GetOrderByID((int)$_GET['id']);
+  GetOrderByID((int)json_decode($_GET['id']));
 ?>

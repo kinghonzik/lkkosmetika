@@ -112,8 +112,7 @@ require_once 'CRSF.php';
       $data->contact->lastname = InStr($order->data->contact->lastname);
       $data->contact->city = InStr($order->data->contact->city);
       $data->contact->zip = InStr($order->data->contact->zip);
-      $data->contact->street = InStr($order->data->contact->street);
-      $data->contact->houseNumber = InStr($order->data->contact->houseNumber);
+      $data->contact->address = InStr($order->data->contact->address);
       $data->contact->email = InStr($order->data->contact->email);
       $data->contact->phone = InStr($order->data->contact->phone);
       $data->contact->company = InStr($order->data->contact->company);
@@ -123,8 +122,7 @@ require_once 'CRSF.php';
       $data->billingContact->lastname = InStr($order->data->billingContact->lastname);
       $data->billingContact->city = InStR($order->data->billingContact->city);
       $data->billingContact->zip = InStr($order->data->billingContact->zip);
-      $data->billingContact->street = InStr($order->data->billingContact->street);
-      $data->billingContact->houseNumber = InStr($order->data->billingContact->houseNumber);
+      $data->billingContact->address = InStr($order->data->billingContact->address);
       $data->billingContact->company = InStr($order->data->billingContact->company);
 
       $data->bllingAddressSame = (bool)$order->data->bllingAddressSame;
@@ -141,7 +139,7 @@ require_once 'CRSF.php';
         throw new ValidationException('V objednavce je prilis mnoho produktu.');
       }
       if (empty($data->contact->firstname) || empty($data->contact->lastname) || empty($data->contact->city)
-        || empty($data->contact->zip) || empty($data->contact->street) || empty($data->contact->houseNumber)
+        || empty($data->contact->zip) || empty($data->contact->address)
         || empty($data->contact->email) || empty($data->contact->phone)) {
         throw new ValidationException('V objednávce u kontaktni adresy chybi nektery z povinnych udaju');
       }

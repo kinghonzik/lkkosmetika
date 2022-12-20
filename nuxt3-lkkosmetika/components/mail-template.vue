@@ -69,7 +69,7 @@
                             </tr>
                             <tr>
                                 <td>Adresa</td>
-                                <td>{{order.data.contact.city}} {{order.data.contact.zip}} {{order.data.contact.street}} {{order.data.contact.houseNumber}}</td>
+                                <td>{{order.data.contact.city}} {{order.data.contact.zip}} {{order.data.contact.address}}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -88,7 +88,7 @@
                             </tr>
                             <tr>
                                 <td>Adresa</td>
-                                <td>{{billingContact.city}} {{billingContact.zip}} {{billingContact.street}} {{billingContact.houseNumber}}</td>
+                                <td>{{billingContact.city}} {{billingContact.zip}} {{billingContact.address}}</td>
                             </tr>
                         </tbody>
                     </table>
