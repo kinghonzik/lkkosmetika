@@ -12,7 +12,7 @@
             <div class="flex-border-text">
                 <h3>ZÁKLADNÍ KOSMETICKÉ OŠETŘENÍ</h3>
                 <br><span class="text-font-size">Dermokosmetikou PhysioNatura</span><br><br><span class="text-font-size"><strong>Ošetření zahrnuje: čištění, tonizace, jemné dočištění tvaru obočí a barvení, barvení řas, depilace horního rtu, masáž obličeje a dekoltu, mikromasáž očního okolí, povrchové čištění UZ špachtlí poté ruční čištění pleti, krémový peeling s meruňkovými jadérky, hydratační maska, sérum, hydratační závěrečný krém na pleť a rty</strong>.</span><br><br><span class="text-font-size">Toto ošetření se především zaměřuje na dokonalé čištění, příjemnou relaxaci a uvolnění s vyhledávaným anti-ageing efektem. Doporučuji provádět od 25 let, během ošetření zažijete luxusní masáž očního okolí. Doporučuji opakovat po třech až čtyřech týdnech.</span><br><br>
-                <p><span class="text-font-size"><em><strong>CCA 90 MINUT –&nbsp;&nbsp;<span style="text-decoration: line-through; text-decoration-color: red; text-decoration-thickness: 2px;">750 KČ</span>&nbsp;&nbsp;<span style="font-size: 12pt;">550 KČ</span></strong></em></span></p>
+                <p><span class="text-font-size"><em><strong>CCA 90 MINUT –&nbsp;&nbsp;<span style="text-decoration: line-through; text-decoration-color: red; text-decoration-thickness: 2px;">750 KČ</span>&nbsp;&nbsp;<span style="font-size: 12pt;">650 KČ</span></strong></em></span></p>
             </div>
         </div>
         <div class="flex-container">
